@@ -1,0 +1,184 @@
+<template>
+  <ClientOnly>
+    <Preloader 
+      @preloader-complete="onPreloaderComplete" 
+      @preloader-ready="onPreloaderReady" 
+    />
+  </ClientOnly>
+  <VisibleGrid v-if="preloaderReady" />
+  <Header v-if="preloaderReady" :page-data="page" />
+  <Transition name="page" mode="out-in" appear @before-enter="onPageBeforeEnter" @after-enter="onPageEnter">
+    <div v-if="preloaderReady" class="page-container" :key="route.fullPath">
+      <Suspense>
+        <main :style="{ paddingTop: mainPaddingVar }">
+          <NuxtPage />
+        </main>
+      </Suspense>
+      <ClientOnly>
+        <template #default>
+          <Footer 
+            v-if="!page?.value?.hideFooter && !isPageTransitioning" 
+            :page-data="page" 
+            :key="route.path"
+            :style="{ opacity: isPageTransitioning ? 0 : 1, transition: 'opacity 0.2s ease' }"
+          />
+        </template>
+        <template #fallback>
+          <!-- No footer during SSR -->
+        </template>
+      </ClientOnly>
+    </div>
+  </Transition>
+</template>
+
+<script setup>
+import Header from '~/components/Header.vue';
+import Footer from '~/components/Footer.vue';
+import Preloader from '~/components/Preloader.vue';
+import { useDarkMode } from '~/composables/usePageUi.js';
+import { useFavicon } from '~/composables/useFavicon.js';
+import { usePageSettings } from '~/composables/usePageSettings';
+import { useScrollTrigger } from '~/composables/useScrollTrigger.js';
+import { computed, onMounted, watch, ref } from 'vue';
+import { useRoute } from 'vue-router'
+import { useHead, useRouter } from '#app'
+
+// Initialize page settings first
+const { isDark, page } = usePageSettings();
+const route = useRoute();
+const router = useRouter();
+
+// Initialize scroll trigger system
+const { enableScrollAnimations } = useScrollTrigger();
+
+// Preloader state
+const preloaderReady = ref(false)
+const isPageTransitioning = ref(false)
+
+// Use custom transition hooks to control scroll position instead of router.scrollBehavior
+
+// Handle page transitions
+router.beforeEach(() => {
+  isPageTransitioning.value = true
+  // Add class to body to prevent footer scroll trigger during transitions
+  if (typeof document !== 'undefined') {
+    document.body.classList.add('page-transitioning')
+  }
+})
+
+router.afterEach(() => {
+  // Keep footer hidden until page transition is complete
+  // The footer will be shown again in onPageEnter after fade-in completes
+})
+
+
+
+// Always use header height padding for main element
+const mainPaddingVar = computed(() => 'var(--header-height)');
+
+
+
+
+
+// Update favicon based on dark mode
+useFavicon(isDark);
+
+// Add script to head to prevent flash of incorrect mode
+useHead({
+  link: [
+    { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
+    { rel: 'preconnect', href: 'https://fonts.gstatic.com', crossorigin: '' },
+    { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css2?family=Public+Sans:ital,wght@0,100..900;1,100..900&display=swap' }
+  ],
+  script: [
+    {
+      children: `
+        (function() {
+          // Default to light mode - let Sanity CMS control dark mode per page
+          document.documentElement.style.backgroundColor = 'var(--white)';
+          
+          console.log('🔴 [App] CDN scripts loaded - plugins should auto-register');
+        })();
+      `,
+      type: 'text/javascript'
+    }
+  ],
+  style: [
+    {
+      children: `
+        :root {
+          --initial-bg: var(--initial-bg-light);
+        }
+        :root.dark-mode {
+          --initial-bg: var(--initial-bg-dark);
+        }
+        body {
+          background-color: var(--initial-bg);
+        }
+      `
+    }
+  ]
+})
+
+// Preloader ready handler
+const onPreloaderReady = () => {
+  // Preloader is ready to start, show content
+  preloaderReady.value = true
+  
+  // Enable scrolling on body
+  if (typeof document !== 'undefined') {
+    document.body.classList.add('preloader-ready')
+    console.log('Added preloader-ready class to body')
+  }
+}
+
+// Preloader complete handler
+const onPreloaderComplete = () => {
+  // Preloader animation finished, site is ready
+  
+  // Enable scroll animations for all elements
+  enableScrollAnimations()
+}
+
+// Log initial state for debugging
+onMounted(() => {
+  // Ensure page starts at top on mount
+  if (typeof window !== 'undefined') {
+    window.scrollTo({ top: 0, behavior: 'instant' })
+  }
+})
+
+// Called when page fade-in completes; refresh scroll-based systems
+const onPageEnter = () => {
+  // Show footer again after page transition completes
+  isPageTransitioning.value = false
+  
+  // Remove page-transitioning class to re-enable footer scroll trigger
+  if (typeof document !== 'undefined') {
+    document.body.classList.remove('page-transitioning')
+  }
+  
+  if (typeof window !== 'undefined' && window.gsap && window.gsap.ScrollTrigger) {
+    window.gsap.ScrollTrigger.refresh()
+  }
+  
+  // Let fade-in system and others know page content is visible
+  document.dispatchEvent(new CustomEvent('page-transition-in-complete'))
+  
+  // Dispatch route-changed event for other plugins
+  document.dispatchEvent(new CustomEvent('route-changed'))
+}
+
+// Called right before the new page starts to enter (fade in)
+// We scroll to top instantly here so the old page can fade out at current scroll position
+// and the new page fades in at the top
+const onPageBeforeEnter = () => {
+  if (typeof window !== 'undefined') {
+    window.scrollTo({ top: 0, behavior: 'instant' })
+  }
+}
+</script>
+
+<style>
+
+</style>
