@@ -1,6 +1,7 @@
 <template>
   <section>
     <div class="wrapper">
+      
       <div class="grid grid-center-items">
         <div class="col-span-12 col-span-8-md rte py3 pbottom">
           <h2 class="h2">{{ section.basicContent.title }}</h2>

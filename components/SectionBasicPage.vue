@@ -1,12 +1,24 @@
 <template>
-  <section>
+  <section class="dark section-basic-page">
     <div class="wrapper">
-      <div class="py2">
-        <div class="grid grid-1 grid-md-12">
-          <div class="col-span-3-md">
-            <h2>{{ section.basicContent.title }}</h2>
+      <div class="py3 grid grid-1 gap-3">
+
+        <div class="grid" style="color: var(--yellow);">
+          <div class="col-span-2-md grid grid-2">
+            <div></div>
+            <div class="grid grid-1 ">
+                <Logo />
+                <div style="width: 270%;">
+                  <Logotype />
+                </div>
+            </div>
           </div>
+        </div>
+
+        <div class="grid py1 pbottom">
+          <div></div>
           <div class="col-span-7-md">
+            <h2>{{ section.basicContent.title }}</h2>
             <div v-if="section?.basicContent?.content" class="content-wrapper">
               <SanityBlocks :blocks="section.basicContent.content" />
             </div>
@@ -21,6 +33,7 @@
             </a>
           </div>
         </div>
+
       </div>
     </div>
   </section>

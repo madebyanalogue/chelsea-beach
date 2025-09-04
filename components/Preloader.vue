@@ -61,11 +61,11 @@ const props = defineProps({
   },
   imageDuration: {
     type: Number,
-    default: 300 // milliseconds per image (faster transitions)
+    default: 0 // milliseconds per image (instant transitions)
   },
   titleDuration: {
     type: Number,
-    default: 1000 // milliseconds for title display
+    default: 0 // milliseconds for title display (instant)
   }
 })
 
@@ -144,25 +144,25 @@ const initPreloaderAnimation = () => {
   // SVG reveal stages
   // Stage 1: Show first group (transparent to visible)
   animationTimeline.set('.website-icon-container g:nth-child(1)', { opacity: 0 }, imageSequenceEnd)
-  animationTimeline.to('.website-icon-container g:nth-child(1)', { opacity: 1, duration: 0.125, ease: 'power2.out' }, svgStage1)
+  animationTimeline.to('.website-icon-container g:nth-child(1)', { opacity: 1, duration: 0, ease: 'power2.out' }, svgStage1)
   
   // Stage 2: Show second group
   animationTimeline.set('.website-icon-container g:nth-child(2)', { opacity: 0 }, imageSequenceEnd)
-  animationTimeline.to('.website-icon-container g:nth-child(2)', { opacity: 1, duration: 0.125, ease: 'power2.out' }, svgStage2)
+  animationTimeline.to('.website-icon-container g:nth-child(2)', { opacity: 1, duration: 0, ease: 'power2.out' }, svgStage2)
   
   // Stage 3: Show third group
   animationTimeline.set('.website-icon-container g:nth-child(3)', { opacity: 0 }, imageSequenceEnd)
-  animationTimeline.to('.website-icon-container g:nth-child(3)', { opacity: 1, duration: 0.125, ease: 'power2.out' }, svgStage3)
+  animationTimeline.to('.website-icon-container g:nth-child(3)', { opacity: 1, duration: 0, ease: 'power2.out' }, svgStage3)
   
   // Fade out SVG and entire preloader after SVG reveal
-  const svgHoldTime = svgStage3 + 0.4 // SVG holds for 0.8 seconds after animation completes
-  const preloaderEndTime = svgHoldTime + 0.2 // Then SVG fades out
+  const svgHoldTime = svgStage3 + 0 // SVG holds for 0 seconds after animation completes
+  const preloaderEndTime = svgHoldTime + 0 // Then SVG fades out
   // Hide SVG container
   animationTimeline.set('.website-icon-container', { opacity: 0 }, preloaderEndTime)
   // Then fade out entire preloader
   animationTimeline.to('.preloader-container', {
     autoAlpha: 0,
-    duration: 0.6,
+    duration: 0,
     ease: "Power1.easeInOut",
     onComplete: () => {
       // Emit preloader complete event for section triggers
@@ -170,7 +170,7 @@ const initPreloaderAnimation = () => {
       // Add class to body so plugins can detect completion
       document.body.classList.add('preloader-complete')
     }
-  }, preloaderEndTime + 0.1) // Reduced from 0.2 to 0.1 seconds
+  }, preloaderEndTime + 0) // Instant completion
 }
 
 // Hide preloader manually

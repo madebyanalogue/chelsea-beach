@@ -5,14 +5,7 @@
         <div v-if="section.contactContent?.content" class="whitespace-pre-line" data-fade-in v-html="formatContent(section.contactContent.content)"></div>
       </div>
       <div>
-        <div class="grid grid-1 grid-sm-2">
-          <NuxtImg
-            v-if="section.contactContent?.ftCreditLogo?.asset?.url"
-            :src="section.contactContent.ftCreditLogo.asset.url"
-            alt="FT Credit Logo"
-            loading="lazy"
-          />
-        </div>
+
       </div>
     </div>
 

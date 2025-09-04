@@ -2,26 +2,32 @@ import { useAsyncData } from '#app'
 import { computed } from 'vue'
 
 export const useSiteSettings = () => {
-  const { data: settings, error, pending } = useAsyncData('siteSettings-v2', () =>
-    $fetch('/api/sanity', { params: { type: 'siteSettings' } })
-  )
+  const { data: settings, error, pending } = useAsyncData('siteSettings-v2', async () => {
+    try {
+      const result = await $fetch('/api/sanity', { params: { type: 'siteSettings' } })
+      return result || {}
+    } catch (err) {
+      console.warn('Failed to fetch site settings, using defaults:', err)
+      return {}
+    }
+  })
 
   return {
     settings,
     error,
     pending,
-    title: computed(() => settings.value?.title),
+    title: computed(() => settings.value?.title || 'Chelsea Beach'),
     contactInfo: computed(() => settings.value?.contactInfo || []),
-    footerLogos: computed(() => {
-      if (!settings.value?.footerLogos) return []
-      return settings.value.footerLogos
-        .filter((logo: { asset?: { url?: string } }) => !!logo?.asset?.url)
-        .map((logo: { asset: { url: string } }) => logo.asset.url)
-    }),
-    certificationLogo: computed(() => settings.value?.certificationLogo?.asset?.url),
-    ftCreditLogo: computed(() => settings.value?.ftCreditLogo?.asset?.url),
-    menuBackgroundImage: computed(() => settings.value?.menuBackgroundImage),
-    linkedinUrl: computed(() => settings.value?.linkedinUrl),
-    preloaderImages: computed(() => settings.value?.preloaderImages || [])
+    openingTimes: computed(() => settings.value?.openingTimes || []),
+    linkedinUrl: computed(() => settings.value?.linkedinUrl || ''),
+    instagramUrl: computed(() => settings.value?.instagramUrl || ''),
+    preloaderImages: computed(() => settings.value?.preloaderImages || []),
+    bookingTitle: computed(() => settings.value?.bookingTitle || 'Book Your Appointment Now'),
+    bookingLink: computed(() => settings.value?.bookingLink || ''),
+    favicon: computed(() => settings.value?.favicon || {}),
+    faviconUrl: computed(() => settings.value?.favicon?.favicon?.asset?.url || ''),
+    faviconPngUrl: computed(() => settings.value?.favicon?.faviconPng?.asset?.url || ''),
+    appleTouchIconUrl: computed(() => settings.value?.favicon?.appleTouchIcon?.asset?.url || ''),
+    androidIconUrl: computed(() => settings.value?.favicon?.androidIcon?.asset?.url || '')
   }
 } 

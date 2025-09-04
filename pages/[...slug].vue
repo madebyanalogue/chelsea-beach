@@ -34,6 +34,7 @@ import { watch } from 'vue'
 import { useRuntimeConfig } from '#app'
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
+import { useSiteSettings } from '~/composables/useSiteSettings'
 
 const route = useRoute()
 const config = useRuntimeConfig()
@@ -47,16 +48,22 @@ const { page: pageData, error, pending } = usePageSettings()
 // Watch for changes in pageData to update title
 watch(() => pageData.value, (newData) => {
   if (newData) {
+    const { title: websiteTitle } = useSiteSettings()
+    const pageTitle = newData.title || route.path.split('/').pop()
+    const fullTitle = `${websiteTitle.value} | ${pageTitle}`
     useHead({
-      title: newData.title || route.path.split('/').pop()
+      title: fullTitle
     })
   }
 }, { immediate: true })
 
 // Page meta
 useHead(() => {
+  const { title: websiteTitle } = useSiteSettings()
   const title = pageData.value?.title || 'Page Not Found';
-  return { title };
+  return { 
+    title: `${websiteTitle.value} | ${title}`
+  };
 })
 
 // Computed property for development mode

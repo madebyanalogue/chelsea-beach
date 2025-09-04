@@ -1,5 +1,7 @@
+@import './dev-backgrounds.css';
+
 :root {
-  --logo-width: 200px;
+  --logo-height: 10px;
   --header-height: calc(calc(var(--pad-1) * 5));
   --initial-bg-light: var(--white);
   --initial-bg-dark: var(--black);
@@ -8,6 +10,40 @@
   --fade-duration: 500ms;
   --fade-stagger: 120ms;
   --fade-initial-delay: 200ms;
+  --header-height: 65px;
+
+
+  --gap: 25px;
+  --gap-md: 50px;
+  --pad: 25px;
+  --pad-md: 50px;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --logo-height: 21px;
+  }
+}
+@media (min-width: 1024px) {
+  :root {
+    
+  }
+}
+
+
+
+#logo svg {
+  width: auto;
+  display:block;
+  height: var(--logo-height);
+}
+
+
+footer {
+  --color: var(--dark-grey);
+  --background-color: var(--white);
+  background-color: var(--background-color);
+  color: var(--color);
 }
 
 /* Page transition fade */
@@ -31,16 +67,7 @@
 :root.dark-mode {
   --initial-bg: var(--initial-bg-dark);
 }
-@media (min-width: 768px) {
-  :root {
-    --logo-width: 300px;
-  }
-}
-@media (min-width: 1024px) {
-  :root {
-    --logo-width: 10vw;
-  }
-}
+
 
 html {
   background-color: var(--initial-bg-light);
@@ -64,12 +91,17 @@ body {
   background-color: var(--initial-bg-dark);
 }
 
-section {
-  background-color: var(--white);
+section, footer, header {
+  --color-bg: var(--white);
+  --color-text: var(--dark-grey);
+  background-color: var(--color-bg);
+  color: var(--color-text);
 }
 .dark-mode section {
-  background-color: var(--black);
+  --color-bg: var(--dark-grey);
+  --color-text: var(--white);
 }
+
 header {
   position: fixed;
   top: 0;
@@ -89,7 +121,7 @@ header a, header button {
 .page-builder {
   display: grid;
   grid-template-columns: 1fr;
-  gap: var(--pad-2);
+  gap: 0px;
 }
 
 .logo {
@@ -104,6 +136,22 @@ header a, header button {
 }
 
 
+.icon--logo {
+  transform: translateX(-50%);
+}
+
+
+
+
+
+
+/* Button styles moved to typography.css */
+
+
+
+
+
+
 #__nuxt {
   min-height: 100svh;
   display: flex;
@@ -113,7 +161,7 @@ header a, header button {
 main {
   flex: 1 0 auto;
   /* Optional: add padding or margin as needed */
-  padding-top: var(--header-height);
+  padding-top: calc(var(--header-height) + calc(calc(var(--h6) * 2.6))) !important;
 }
 
 
@@ -534,25 +582,20 @@ body.preloader-complete {
   flex-direction: column;
 }
 
-.page-container main {
+main > div, .page-container main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.page-builder {
   flex: 1;
 }
 
-/* Page title scramble effect */
+/* Page title fade transition effect */
 .page-title {
-  overflow: hidden;
-  cursor: pointer;
   transition: opacity 0.3s ease;
-  pointer-events: all;
-}
-
-.page-title .word {
-  display: inline-block;
-  overflow: hidden;
-}
-
-.page-title .char {
-  display: inline-block;
+  font-size: 16px;
+  text-transform: uppercase;
 }
 
 /* Generic fade-in utility controlled by data attribute */

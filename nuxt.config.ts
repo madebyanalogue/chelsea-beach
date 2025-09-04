@@ -3,11 +3,10 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: [
     '@nuxtjs/sanity',
-    '@nuxt/content',
     '@nuxt/image'
   ],
   sanity: {
-    projectId: 'xanklzya',
+    projectId: 'wwwrb2ji',
     dataset: 'production',
     useCdn: true
   },
@@ -37,5 +36,32 @@ export default defineNuxtConfig({
 
   build: {
     transpile: ['gsap']
+  },
+  
+  app: {
+    head: {
+      link: [
+        {
+          rel: 'preload',
+          href: '/fonts/RoslindaleDeckNarrowMedium.woff2',
+          as: 'font',
+          type: 'font/woff2',
+          crossorigin: 'anonymous'
+        },
+        {
+          rel: 'preload',
+          href: '/fonts/Typewriter_Regular_PRO.woff2',
+          as: 'font',
+          type: 'font/woff2',
+          crossorigin: 'anonymous'
+        }
+      ],
+      script: [
+        {
+          src: 'https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/CustomEase.min.js',
+          defer: true
+        }
+      ]
+    }
   }
 })

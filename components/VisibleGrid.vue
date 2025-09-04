@@ -28,7 +28,7 @@ onUnmounted(() => {
 .visible-grid {
   position: fixed;
   inset: 0;
-  z-index: 0;
+  z-index: 1000;
   pointer-events: none;
   display: flex;
   align-items: center;
@@ -43,8 +43,8 @@ onUnmounted(() => {
   height: 100vh;
 }
 .grid-col {
-  background: yellow;
-  opacity: 0.3;
+  background: black;
+  opacity: 0.1;
   border-radius: 2px;
   height: 100%;
 }

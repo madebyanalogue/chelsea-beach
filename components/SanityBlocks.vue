@@ -16,7 +16,7 @@ defineProps({
 </script>
 
 <style scoped>
-:deep(p) {
+:deep(p):not(:last-child) {
   margin-bottom: 1em;
 }
 
@@ -52,6 +52,7 @@ defineProps({
   color: inherit;
   text-decoration: underline;
   text-underline-offset: 0.2em;
+  text-decoration-thickness: 1px;
 }
 
 :deep(a:hover) {

@@ -35,7 +35,6 @@ export default defineNuxtPlugin(async () => {
 
   // Load club plugins
   await Promise.all([
-    loadClubPlugin('ScrambleTextPlugin', 'ScrambleTextPlugin'),
     loadClubPlugin('InertiaPlugin', 'InertiaPlugin')
   ])
 

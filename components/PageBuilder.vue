@@ -1,5 +1,5 @@
 <template>
-  <div :class="['page-builder', 'py2', { 'pbottom': removeTopPadding }]">
+  <div :class="['page-builder', { 'pbottom': removeTopPadding }]">
     <template v-for="(section, index) in sections" :key="section._id || index">
       
       <SectionHero
@@ -64,8 +64,14 @@
         :section="section"
       />
 
-      <SectionSelectedServices
-        v-else-if="section._type === 'section' && section.sectionType === 'selectedServices'"
+      <SectionService
+        v-else-if="section._type === 'section' && section.sectionType === 'service'"
+        :section="section"
+      />
+
+      <!-- USPs Section -->
+      <SectionUsps
+        v-else-if="section._type === 'section' && section.sectionType === 'usps'"
         :section="section"
       />
 
@@ -99,6 +105,69 @@
         :section="section"
       />
 
+      <!-- Dual Carousel Section -->
+      <SectionDualCarousel
+        v-else-if="section._type === 'section' && section.sectionType === 'dualCarousel'"
+        :section="section"
+      />
+
+      <!-- Single Carousel Section -->
+      <SectionSingleCarousel
+        v-else-if="section._type === 'section' && section.sectionType === 'singleCarousel'"
+        :section="section"
+      />
+
+      <!-- Team Section -->
+      <SectionTeam
+        v-else-if="section._type === 'section' && section.sectionType === 'team'"
+        :section="section"
+      />
+
+      <!-- Marquee Section -->
+      <SectionMarquee
+        v-else-if="section._type === 'section' && section.sectionType === 'marquee'"
+        :section="section"
+        :repeat-count="section.marqueeContent?.repeatCount ?? 10"
+        :marquee-speed="section.marqueeContent?.marqueeSpeed ?? 15"
+        :reverse="section.marqueeContent?.reverse ?? false"
+      />
+
+      <!-- Service Links Section -->
+      <SectionServiceLinks
+        v-else-if="section._type === 'section' && section.sectionType === 'serviceLinks'"
+        :section="section"
+      />
+
+      <!-- Section Images -->
+      <SectionImages
+        v-else-if="section._type === 'section' && section.sectionType === 'sectionImages'"
+        :section="section"
+      />
+
+      <!-- Tips From The Table -->
+      <SectionTipsFromTheTable
+        v-else-if="section._type === 'section' && section.sectionType === 'sectionTipsFromTheTable'"
+        :section="section"
+      />
+
+      <!-- Reviews Section -->
+      <SectionReviews
+        v-else-if="section._type === 'section' && section.sectionType === 'reviews'"
+        :section="section"
+      />
+
+      <!-- Instagram Section -->
+      <SectionInstagram
+        v-else-if="section._type === 'section' && section.sectionType === 'sectionInstagram'"
+        :section="section"
+      />
+
+      <!-- Galleries Section -->
+      <SectionGalleries
+        v-else-if="section._type === 'section' && section.sectionType === 'sectionGalleries'"
+        :section="section"
+      />
+
       <!-- Fallback for empty or misconfigured Home Scroll Section -->
       <div
         v-else-if="section._type === 'section' && section.sectionType === 'homeScroll'"
@@ -126,13 +195,35 @@
 <script setup>
 import { computed, watch, onMounted, onUnmounted } from 'vue'
 import { usePageSettings } from '~/composables/usePageSettings'
+import SectionHero from '~/components/SectionHero.vue'
+import SectionBasicPage from '~/components/SectionBasicPage.vue'
+import SectionImage from '~/components/SectionImage.vue'
+import SectionHeadline from '~/components/SectionHeadline.vue'
+import SectionContact from '~/components/SectionContact.vue'
+import SectionBasicContent from '~/components/SectionBasicContent.vue'
+import SectionHomeScroll from '~/components/SectionHomeScroll.vue'
+import SectionTwoColumn from '~/components/SectionTwoColumn.vue'
+import SectionNested from '~/components/SectionNested.vue'
+import SectionBanner from '~/components/SectionBanner.vue'
+import SectionNews from '~/components/SectionNews.vue'
 import SectionServices from '~/components/SectionServices.vue'
-import SectionSelectedServices from '~/components/SectionSelectedServices.vue'
+import SectionService from '~/components/SectionService.vue'
 import SectionSelectedNews from '~/components/SectionSelectedNews.vue'
+import SectionUsps from '~/components/SectionUsps.vue'
 import SectionQuote from '~/components/SectionQuote.vue'
 import SectionGoogleMap from '~/components/SectionGoogleMap.vue'
 import SectionGallery from '~/components/SectionGallery.vue'
 import SectionText from '~/components/SectionText.vue'
+import SectionDualCarousel from '~/components/SectionDualCarousel.vue'
+import SectionSingleCarousel from '~/components/SectionSingleCarousel.vue'
+import SectionTeam from '~/components/SectionTeam.vue'
+import SectionMarquee from '~/components/SectionMarquee.vue'
+import SectionServiceLinks from '~/components/SectionServiceLinks.vue'
+import SectionImages from '~/components/SectionImages.vue'
+import SectionTipsFromTheTable from '~/components/SectionTipsFromTheTable.vue'
+import SectionReviews from '~/components/SectionReviews.vue'
+import SectionInstagram from '~/components/SectionInstagram.vue'
+import SectionGalleries from '~/components/SectionGalleries.vue'
 
 const props = defineProps({
   sections: {

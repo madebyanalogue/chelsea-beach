@@ -11,26 +11,21 @@ export default defineNuxtPlugin(() => {
   // Initialize button hover effects with retry mechanism
   const initButtonHoverWithRetry = () => {
     if (retryCount >= maxRetries) {
-      console.log('Max retries reached for button hover')
       return
     }
 
     // Look for buttons with data-btn-hover attribute
     const buttons = document.querySelectorAll('[data-btn-hover]')
-    console.log('Looking for buttons with data-btn-hover, found:', buttons.length)
     
     if (buttons.length > 0) {
-      console.log('Found buttons, initializing button hover effects')
       try {
         initButtonHover()
-        console.log('Button hover function called successfully')
         retryCount = 0 // Reset retry count on success
       } catch (error) {
         console.error('Error calling initButtonHover:', error)
       }
     } else {
       retryCount++
-      console.log(`No buttons found, retry ${retryCount}/${maxRetries} in 500ms...`)
       // Retry after a delay
       setTimeout(initButtonHoverWithRetry, 500)
     }
@@ -38,7 +33,6 @@ export default defineNuxtPlugin(() => {
 
   // Function to re-initialize button hover effects after route changes
   const reinitializeButtonHover = () => {
-    console.log('Route change detected, re-initializing button hover effects...')
     retryCount = 0 // Reset retry count
     setTimeout(initButtonHoverWithRetry, 100) // Small delay for DOM to update
   }

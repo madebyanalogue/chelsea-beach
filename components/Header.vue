@@ -1,28 +1,40 @@
 <template>
-  <header ref="headerRef" :class="['header-bar', 'flex', 'flex-row', 'flex-center', 'flex-middle', 'px2', 'py1']">
-    <div class="header-left">
-      <div class="page-title-container">
-        <div class="page-title mono" :data-page-title="pageTitle">{{ pageTitle }}</div>
+
+
+  <header ref="headerRef">
+
+    <SectionMarquee />
+  
+    <div class="header-bar flex flex-row flex-center flex-middle px2">
+      <div class="header-left">
+        <div class="page-title-container">
+          <div class="page-title mono" :data-page-title="pageTitle" ref="pageTitleRef">{{ displayTitle }}</div>
+        </div>
       </div>
-    </div>
-    <NuxtLink
-      v-if="!pageData?.hideHeaderLogo"
-      to="/"
-      class="logo-center"
-    >
-      <div id="logo">{{ websiteTitle }}</div>
-    </NuxtLink>
-    <div v-else class="logo-center">
-      <div class="logo">
-        <!-- Empty div to maintain layout when logo is hidden -->
+      <NuxtLink
+        v-if="!pageData?.hideHeaderLogo"
+        to="/"
+        class="logo-center"
+      >
+        <div id="logo">
+          <Logotype />
+        </div>
+      </NuxtLink>
+      <div v-else class="logo-center">
+        <div class="logo">
+          <!-- Empty div to maintain layout when logo is hidden -->
+        </div>
       </div>
-    </div>
-    
-    <div class="header-right flex flex-row flex-center">
       
+      <div class="header-right flex flex-row flex-center">
+        <MobileMenu 
+          :is-open="menuOpen" 
+          @close-menu="closeMenu" 
+        />
+        <MenuButton :is-active="menuOpen" @toggle-menu="toggleMenu" />
+      </div>
+
     </div>
-    
-    <HamburgerNav />
   </header>
 </template>
 
@@ -33,7 +45,8 @@ import { useRoute } from '#app';
 import { useHeaderScroll } from '~/composables/useHeaderScroll';
 import { useSiteSettings } from '~/composables/useSiteSettings';
 import Logo from '~/components/Logo.vue';
-import HamburgerNav from '~/components/HamburgerNav.vue';
+import MenuButton from '~/components/MenuButton.vue';
+import MobileMenu from '~/components/MobileMenu.vue';
 
 const props = defineProps({
   pageData: {
@@ -78,6 +91,37 @@ const pageTitle = computed(() => {
   return '';
 });
 
+const displayTitle = ref('');
+const pageTitleRef = ref(null);
+
+// Watch for page title changes and let the plugin handle transitions
+watch(pageTitle, (newTitle) => {
+  // Initialize displayTitle if it's empty
+  if (!displayTitle.value && newTitle) {
+    displayTitle.value = newTitle
+  }
+  
+  if (pageTitleRef.value) {
+    // Let the plugin handle the transition
+    if (window.handlePageTitleTransition) {
+      window.handlePageTitleTransition(newTitle, pageTitleRef.value, displayTitle)
+    } else {
+      // Fallback: update immediately if plugin not ready
+      displayTitle.value = newTitle
+    }
+  } else {
+    // If ref not available yet, just update the display title
+    displayTitle.value = newTitle
+  }
+}, { immediate: true })
+
+// Initialize displayTitle with current page title
+onMounted(() => {
+  if (!displayTitle.value && pageTitle.value) {
+    displayTitle.value = pageTitle.value
+  }
+})
+
 const updateHeights = () => {
   if (headerRef.value) {
     const headerHeight = headerRef.value.offsetHeight;
@@ -96,31 +140,8 @@ const initializeMomentumHover = () => {
 
 
 onMounted(() => {
-  // Set initial state - header hidden above viewport
-  if (headerRef.value) {
-    gsap.set(headerRef.value, { y: '-100%' })
-  }
-  
   window.addEventListener('resize', updateHeights);
   nextTick(updateHeights);
-
-  // Listen for preloader completion to animate header in
-  const onPreloaderComplete = () => {
-    if (!headerAnimated.value && headerRef.value) {
-      headerAnimated.value = true
-      
-      // Animate header down with smooth easing (only translateY)
-      gsap.to(headerRef.value, { 
-        y: '0%', 
-        duration: 0.8, 
-        delay: 0.1,
-        ease: 'power3.out'
-      })
-    }
-  }
-
-  // Always wait for preloader completion event
-  document.addEventListener('preloader-complete', onPreloaderComplete)
 
   // Watch for title changes
   const observer = new MutationObserver((mutations) => {
@@ -139,7 +160,6 @@ onMounted(() => {
   onUnmounted(() => {
     window.removeEventListener('resize', updateHeights);
     observer.disconnect();
-    document.removeEventListener('preloader-complete', onPreloaderComplete);
   });
 });
 
@@ -188,16 +208,6 @@ const openMenu = () => {
   // Stop scrolling
   document.body.style.overflow = 'hidden'
   
-  // Animate content push
-  const pageContainer = document.querySelector('.page-container')
-  if (pageContainer) {
-    gsap.to(pageContainer, {
-      y: '100vh',
-      duration: 0.3,
-      ease: 'power2.out'
-    })
-  }
-  
   setTimeout(() => {
     isAnimating.value = false
   }, 300)
@@ -205,16 +215,6 @@ const openMenu = () => {
 
 const closeMenu = () => {
   isAnimating.value = true
-  
-  // Animate content back
-  const pageContainer = document.querySelector('.page-container')
-  if (pageContainer) {
-    gsap.to(pageContainer, {
-      y: '0vh',
-      duration: 0.3,
-      ease: 'power2.out'
-    })
-  }
   
   setTimeout(() => {
     menuOpen.value = false
@@ -227,26 +227,20 @@ const closeMenu = () => {
 <style scoped>
 
 
-#logo {
-  text-transform: uppercase;
-  text-align: center;
-  font-size: clamp(17px, 3.5vw, 70px);
-  font-weight: 400;
-}
+
 .header-bar {
-  position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 1000;
   transition: background 0.3s ease, color 0.3s ease;
-  background: transparent;
   justify-content: space-between;
   display:grid;
   grid-template-areas:
         "leftTop right"
         "leftBottom right";
   gap: 10px;
+  height: var(--header-height);
   grid-template-rows: auto;
   /* Initial state will be handled entirely by GSAP */
 }
@@ -291,6 +285,8 @@ const closeMenu = () => {
   z-index: 1003;
   position: relative;
 }
+
+
 .header-left {
   justify-content: flex-start;
   grid-area: leftBottom;
@@ -353,42 +349,6 @@ const closeMenu = () => {
   display: flex;
   align-items: center;
 }
-.page-title span {
-  position: relative;
-  width: var(--pad-1);
-  height: var(--pad-1);
-  margin-right: calc(var(--pad-1) * 0.5);
-  display: inline-block;
-}
-.page-title span:after,
-.page-title span:before {
-  content: '';
-  display: block;
-  position: absolute;
-  top: 0;
-  left: 0;
-}
 
-.page-title span:after {
-  width: 69%;
-  height: 55%;
-  border-bottom: 1px solid currentColor;
-  border-left: 1px solid currentColor;
-}
-.page-title span:before {
-  width: 40%;
-  height: 40%;
-  transform: rotate(-135deg);
-  border-bottom: 1px solid currentColor;
-  border-left: 1px solid currentColor;
-  right: 30%;
-  left: unset;
-  top: calc(37% - 1px);
-}
-@media all and (min-width: 1024px) {
-  .page-title span {
-    display: none;
-  }
-}
 
 </style> 

@@ -5,7 +5,6 @@
 
 // Shared handler so we can bind it once per element
 function handleHover(event) {
-  console.log('[ButtonHover] Hover event triggered:', event.type)
   const button = event.currentTarget;
   const buttonRect = button.getBoundingClientRect();
 
@@ -40,7 +39,6 @@ function handleHover(event) {
     circle.style.borderRadius = '50%';
     button.appendChild(circle);
   }
-  console.log('[ButtonHover] Circle element found:', !!circle)
 
   // Calculate circle size to ensure it covers the entire button
   const diagonal = Math.sqrt(buttonWidth * buttonWidth + buttonHeight * buttonHeight);
@@ -50,25 +48,11 @@ function handleHover(event) {
   circle.style.top = `${offsetYFromTop.toFixed(1)}%`;
   circle.style.width = `${circleSize}px`;
   circle.style.height = `${circleSize}px`;
-  
-  console.log('[ButtonHover] Circle updated:', { 
-    left: circle.style.left, 
-    top: circle.style.top, 
-    width: circle.style.width, 
-    height: circle.style.height,
-    buttonWidth,
-    buttonHeight,
-    diagonal,
-    circleSize
-  })
 }
 
 export function initDirectionalButtonHover() {
-  console.log('[ButtonHover] Initializing directional button hover effects')
-  
   // Button hover animation
   const buttons = document.querySelectorAll('[data-btn-hover]')
-  console.log('[ButtonHover] Found buttons:', buttons.length)
   
   buttons.forEach(button => {
     // Idempotent: avoid double-binding across navigations

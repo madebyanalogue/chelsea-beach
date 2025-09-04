@@ -7,7 +7,25 @@
         <p class="hamburger-nav__menu-p">Menu</p>
         <ul class="hamburger-nav__ul">
           <div v-for="(item, idx) in normalizedMenuItems" :key="idx" class="hamburger-nav__li">
-            <NuxtLink :to="item.to" class="hamburger-nav__a" @click="closeMenu">
+            <!-- Use regular anchor tag for external/custom URLs -->
+            <a 
+              v-if="item.isExternal" 
+              :href="item.to" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              class="hamburger-nav__a" 
+              @click="closeMenu"
+            >
+              <p class="hamburger-nav__p">{{ item.text }}</p>
+              <div class="hamburger-nav__dot"></div>
+            </a>
+            <!-- Use NuxtLink for internal page navigation -->
+            <NuxtLink 
+              v-else 
+              :to="item.to" 
+              class="hamburger-nav__a" 
+              @click="closeMenu"
+            >
               <p class="hamburger-nav__p">{{ item.text }}</p>
               <div class="hamburger-nav__dot"></div>
             </NuxtLink>
@@ -25,8 +43,10 @@
 <script setup>
 import { computed } from 'vue'
 import { useMenu } from '~/composables/useMenu'
+import { useUrlProcessing } from '~/composables/useUrlProcessing'
 
 const { mainMenu } = useMenu()
+const { getProcessedUrl } = useUrlProcessing()
 
 // Function to close the menu when a link is clicked
 const closeMenu = () => {
@@ -42,8 +62,22 @@ const normalizedMenuItems = computed(() => {
     const text = it?.text || it?.title || 'Untitled'
     const slug = it?.to?.page?.slug?.current
     const url = it?.to?.url
-    const to = slug ? `/${slug}` : (url || '#')
-    return { text, to }
+    
+    // Determine if this is an external/custom URL
+    const isExternal = !!url && !slug
+    
+    let to
+    if (slug) {
+      // Internal page navigation
+      to = `/${slug}`
+    } else if (url) {
+      // External URL - process it to ensure proper protocol
+      to = getProcessedUrl(url)
+    } else {
+      to = '#'
+    }
+    
+    return { text, to, isExternal }
   })
 })
 </script>

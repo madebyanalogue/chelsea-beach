@@ -8,10 +8,6 @@
           <!-- Left Side - Image/Media -->
           <div class="menu-left">
             <div class="menu-media-wrapper">
-              <img v-if="menuImageUrl" :src="menuImageUrl" alt="Menu background" />
-              <div v-else style="background: #ccc; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: #666;">
-                No image loaded
-              </div>
             </div>
           </div>
           
@@ -30,7 +26,7 @@
                     </NuxtLink>
                     <a 
                       v-else-if="item.to?.url" 
-                      :href="item.to.url" 
+                      :href="getProcessedUrl(item.to.url)" 
                       target="_blank" 
                       rel="noopener"
                       @click="closeMenu"
@@ -91,18 +87,29 @@ const emit = defineEmits(['close-menu'])
 
 // Get menu data
 const { mainMenu } = useMenu()
-const { settings, contactInfo, menuBackgroundImage } = useSiteSettings()
+const { settings, contactInfo } = useSiteSettings()
 const { getImageUrl } = useSanityImage()
 
 const menuItems = computed(() => mainMenu?.value?.items || [])
 
-// Use site settings image only
-const menuImageUrl = computed(() => {
-  if (menuBackgroundImage.value) {
-    return getImageUrl(menuBackgroundImage.value)
+// Function to process external URLs consistently
+const getProcessedUrl = (url) => {
+  if (!url) return '#'
+  
+  if (url.startsWith('http://') || url.startsWith('https://')) {
+    return url
+  } else if (url.startsWith('//')) {
+    // Protocol-relative URL
+    return `https:${url}`
+  } else if (url.startsWith('/')) {
+    // Absolute path on same domain
+    return url
+  } else {
+    // Relative URL or domain without protocol - treat as external
+    return `https://${url}`
   }
-  return null
-})
+}
+
 
 // Close menu function
 const closeMenu = () => {

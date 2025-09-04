@@ -1,27 +1,44 @@
 @font-face {
-  font-family: 'Carbona Mono';
-  src: url('/fonts/CarbonaTestMonoRegular.woff2') format('woff2');
+  font-family: 'Roslinda';
+  src: url('/fonts/RoslindaleDeckNarrowMedium.woff2') format('woff2');
   font-weight: 400;
   font-style: normal;
 }
 
+@font-face {
+  font-family: 'Typewriter Regular PRO';
+  src: url('/fonts/Typewriter_Regular_PRO.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}
+
+
+
 :root {
-  --black: #000;
   --white: #fff;
-  --grey: #f4f3f2;
+  --black: #000;
+  --dark-grey: #5b5653;
+  --mid-grey: #dfd3cd;
+  --light-grey: #f7efeb;
+  --beige: #dfd3cd;
+  --yellow: #ffdd15;
   --color-bg: var(--white);
-  --color-text: var(--black);
+  --color-text: var(--dark-grey);
   --color-link: var(--black);
   --mono-spacing: 0.1em;
   --arrow-size: 30px;
-  --mono: 'Carbona Mono', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-  --body-font: 'Public Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  --letterspacing: 0.05em;
+  --letterspacing-small: 0.25em;
+  --letterspacing-medium: 0.5em;
+  --letterspacing-large: 1em;
+  --heading: 'Roslinda', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  --body-font: 'Typewriter Regular PRO', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
 
 .dark-mode, .dark {
-  --color-bg: var(--black);
+  --color-bg: var(--dark-grey);
   --color-text: var(--white);
-  --color-link: var(--white);
+  --color-link: var(--yellow);
 }
 
 .grey-bg {
@@ -55,26 +72,16 @@ h1, h2, h3, h4, h5, h6, body {
   overflow: hidden;
   position: relative;
   display: inline-block;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
   border-radius: 50px;
-  padding: calc(var(--h6) * .6) calc(var(--h6) * 1.8);
-  font-size: var(--h6);
-  font-family:var(--mono);
-  letter-spacing: var(--mono-spacing);
-  white-space: nowrap;
+  padding: calc(var(--body) * .4) calc(var(--body) * 1.5) calc(var(--body) * .3);
+  font-size: var(--body);
 }
 .button:hover {
   background: var(--color-text);
   color: var(--color-bg);
 }
-@media (min-width: 768px) {
-  .button {
-    min-width: 200px;
-  }
-}
 
-.mono {
+.heading {
   text-transform: uppercase;
   font-weight: 400;
   letter-spacing: var(--mono-spacing);
@@ -129,9 +136,9 @@ LARGE TITLES
 --------------------------------- */ 
 
 
-.h1     { line-height: 1.1; }
-.h2     { line-height: 1.1; }
-.h3     { line-height: 1.0; }
+.h1     { line-height: 1.0; }
+.h2     { line-height: 1.2; }
+.h3     { line-height: 1.125; }
 .h4     { line-height: 1.2; }
 .h5     { line-height: 1.2; }
 .h6     { line-height: 1.2; }
@@ -146,19 +153,21 @@ body    { line-height: 1.2; }
 .h5, .rte h5 { font-size: var(--h5); }
 .h6, .rte h6 { font-size: var(--h6); }
 .h7, .rte h7 { font-size: var(--h7); }
-body { font-size: clamp(14px, var(--body), 27px); }
+body { font-size: clamp(14px, var(--body), 27px); 
+letter-spacing: var(--letterspacing);
+}
 
 :root {
   --unit: 2vw;
   --unit-reference: 1600;
-  --h1: calc((50 / (var(--unit-reference) / 100)) * var(--unit));
-  --h2: calc((36 / (var(--unit-reference) / 100)) * var(--unit));
-  --h3: calc((30 / (var(--unit-reference) / 100)) * var(--unit));
-  --h4: clamp(14px, calc((22 / (var(--unit-reference) / 100)) * var(--unit)), 80px);
-  --h5: clamp(14px, calc((19 / (var(--unit-reference) / 100)) * var(--unit)), 80px);
+  --h1: calc((48 / (var(--unit-reference) / 100)) * var(--unit));
+  --h2: calc((35 / (var(--unit-reference) / 100)) * var(--unit));
+  --h3: calc((32 / (var(--unit-reference) / 100)) * var(--unit));
+  --h4: clamp(14px, calc((25 / (var(--unit-reference) / 100)) * var(--unit)), 80px);
+  --h5: clamp(14px, calc((21 / (var(--unit-reference) / 100)) * var(--unit)), 80px);
   --h6: clamp(14px, calc((16 / (var(--unit-reference) / 100)) * var(--unit)), 80px);
   --h7: clamp(11px, calc((12 / (var(--unit-reference) / 100)) * var(--unit)), 80px);
-  --body: clamp(15px, calc((24 / (var(--unit-reference) / 100)) * var(--unit)), 80px);
+  --body: clamp(15px, calc((19 / (var(--unit-reference) / 100)) * var(--unit)), 80px);
 }
 
 h1, h2, h3, h4, h5, h6, h7 {
@@ -178,9 +187,9 @@ h1, h2, h3, h4, h5, h6, h7 {
     }
 }
 
-@media all and (min-width:1600px) {
+@media all and (min-width:2000px) {
   :root {
-    /*--h5: 20px;*/
+    --unit: 20px;
   }
 }
 
@@ -193,14 +202,18 @@ h1, h2, h3, h4, h5, h6, h7 {
 
 
 
-.page-title {
-  font-size: var(--h4);
-}
+
 .uppercase {
-  text-transform: uppercase;
+  text-transform:uppercase;
 }
-.letter-spacing {
-  letter-spacing: 0.1em;
+.small-spacing {
+  letter-spacing: var(--letterspacing-small);
+}
+.medium-spacing {
+  letter-spacing: var(--letterspacing-medium);
+}
+.large-spacing {
+  letter-spacing: var(--letterspacing-large);
 }
 .transform-none {
   text-transform: none;

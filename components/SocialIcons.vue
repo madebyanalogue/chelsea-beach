@@ -1,20 +1,59 @@
 <template>
-    <div class="row gap-2 social-icons">
-      <a v-if="linkedinUrl" :href="linkedinUrl" target="_blank">
-        <svg id="a" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 67 67">
-          <path fill="currentColor" d="M62.05,0H4.95C2.22,0,0,2.15,0,4.8v57.4c0,2.65,2.22,4.8,4.95,4.8h57.1c2.73,0,4.95-2.15,4.95-4.8V4.8C67,2.15,64.78,0,62.05,0ZM10.33,56.07v-30.16h10.03v30.16h-10.03ZM15.35,21.79h0s-.06,0-.06,0c-3.36,0-5.54-2.32-5.54-5.21s2.24-5.21,5.67-5.21,5.54,2.25,5.61,5.21c0,2.89-2.18,5.21-5.67,5.21ZM56.51,56.07h-10.02v-16.13c0-4.06-1.45-6.82-5.08-6.82-2.77,0-4.42,1.87-5.14,3.67-.26.64-.33,1.55-.33,2.45v16.84h-10.03s.13-27.33,0-30.16h10.03v4.27c1.33-2.05,3.72-4.98,9.04-4.98,6.6,0,11.54,4.31,11.54,13.58v17.29Z"/>
-        </svg>
+    <div class="row gap-05 social-icons">
+      <a v-if="linkedinUrl" :href="linkedinUrl" target="_blank" class="social-link">
+        <div class="social-icon-circle">
+          <svg id="a" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" fill="var(--background-color)">
+            <path d="M125.5,93.5c-34.32,2.79-29.4,51.36,5.95,47.41,32.04-3.58,28.48-50.21-5.95-47.41ZM176.16,297.85h44.62l1.35-1.35v-84.73c0-.72,3.36-7.42,4.11-8.51,10.92-15.61,34.97-14.62,41.36,4.49.56,1.69,2.3,8.15,2.3,9.42v79.32l1.35,1.35h43.27l1.4-3.11c-3.9-36.32,12.19-104.32-21.76-128.87-21.41-15.48-57.83-12.53-71.15,12.08h-1.33c-1.27-.14.44-1.14.44-1.34v-16.68h-45.97v137.91ZM150.92,159.93h-45.97v137.91h45.97v-137.91Z"/>
+          </svg>
+        </div>
+      </a>
+      <a v-if="instagramUrl" :href="instagramUrl" target="_blank" class="social-link">
+        <div class="social-icon-circle">
+          <svg id="a" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" fill="var(--background-color)">
+            <path d="M200.91,143.58c-31.61,0-57.33,25.72-57.33,57.33s25.72,57.33,57.33,57.33,57.33-25.72,57.33-57.33-25.72-57.33-57.33-57.33ZM200.91,240.86c-22.03,0-39.95-17.92-39.95-39.96s17.92-39.95,39.95-39.95,39.95,17.92,39.95,39.95-17.92,39.96-39.95,39.96Z"/>
+            <path d="M264.48,122.42c-8.24,0-14.92,6.68-14.92,14.93s6.68,14.93,14.92,14.93,14.93-6.69,14.93-14.93-6.68-14.93-14.93-14.93Z"/>
+            <path d="M244.84,87.59h-87.86c-38.26,0-69.38,31.13-69.38,69.38v87.87c0,38.26,31.12,69.38,69.38,69.38h87.86c38.26,0,69.39-31.12,69.39-69.38v-87.87c0-38.26-31.13-69.38-69.39-69.38ZM297.26,244.84c0,28.9-23.52,52.42-52.42,52.42h-87.86c-28.9,0-52.42-23.52-52.42-52.42v-87.87c0-28.9,23.52-52.42,52.42-52.42h87.86c28.91,0,52.42,23.52,52.42,52.42v87.87Z"/>
+          </svg>
+        </div>
       </a>
     </div>
 </template>
 
 <script setup>
-const props = defineProps({ linkedinUrl: String })
+const props = defineProps({ 
+  linkedinUrl: String,
+  instagramUrl: String 
+})
 </script>
 
 <style scoped>
-.social-icons svg {
-  width: calc(var(--unit) * 3);
-  height: calc(var(--unit) * 3);
+.social-icons {
+  display: flex;
+}
+
+.social-link {
+  display: block;
+  text-decoration: none;
+}
+
+.social-icon-circle {
+  width: calc(var(--unit) * 2.5);
+  height: calc(var(--unit) * 2.5);
+  border-radius: 50%;
+  background: currentColor;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.social-icon-circle svg {
+  width: calc(var(--unit) * 2.5);
+  height: calc(var(--unit) * 2.5);
+  fill:var(--background-color);
+}
+
+.social-icon-circle:hover {
+  /* transform: scale(1.1); */
 }
 </style> 

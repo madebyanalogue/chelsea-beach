@@ -35,6 +35,7 @@ import { useRuntimeConfig } from '#app'
 import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { usePageSettings } from '~/composables/usePageSettings'
+import { useSiteSettings } from '~/composables/useSiteSettings'
 
 const { $sanity } = useNuxtApp()
 const config = useRuntimeConfig()
@@ -46,16 +47,22 @@ const { page: pageData, error, pending } = usePageSettings()
 // Watch for changes in pageData to update title
 watch(() => pageData.value, (newData) => {
   if (newData) {
+    const { title: websiteTitle } = useSiteSettings()
+    const pageTitle = newData.title || 'Home'
+    const fullTitle = `${websiteTitle.value} | ${pageTitle}`
     useHead({
-      title: newData.title || 'Home'
+      title: fullTitle
     })
   }
 }, { immediate: true })
 
 // Page meta
 useHead(() => {
+  const { title: websiteTitle } = useSiteSettings()
   const title = pageData.value?.title || 'Home';
-  return { title };
+  return { 
+    title: `${websiteTitle.value} | ${title}`
+  };
 })
 
 // Computed property for development mode

@@ -40,7 +40,10 @@ export const usePageSettings = () => {
         
                        return result
              } catch (err) {
-               // Set defaults on error
+               // Set defaults on error and don't log 404 errors
+               if (err.statusCode !== 404) {
+                 console.warn('Failed to fetch page settings, using defaults:', err)
+               }
                useRemoveTopPadding.value = defaultSettings.removeTopPadding
                isDark.value = defaultSettings.darkMode
                return null

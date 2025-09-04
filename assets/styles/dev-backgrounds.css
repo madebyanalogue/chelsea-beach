@@ -1,0 +1,85 @@
+/* Development Background Images */
+/* Remove this file when done building */
+
+
+/* Section backgrounds */
+.hero-section {
+  background-image: url('/sections/hero.jpg');
+  background-position: center top;
+  background-size: 100%;
+  background-repeat: no-repeat;
+  min-height: 800px;
+}
+
+.section-duel-carousel {
+  background-image: url('/sections/section-duel-carousel.jpg');
+  background-position: center top;
+  background-size: 100%;
+  background-repeat: no-repeat;
+  min-height: 500px;
+}
+
+.service-section {
+  background-image: url('/sections/section-pricelist-3.jpg');
+  background-position: center top;
+  background-size: 100%;
+  background-repeat: no-repeat;
+  min-height: 450px;
+}
+
+.section-usps {
+  background-image: url('/sections/section-usps.jpg');
+  background-position: center top;
+  background-size: 100%;
+  background-repeat: no-repeat;
+  min-height: 550px;
+}
+
+.section-text {
+  background-image: url('/sections/section-text-2.jpg');
+  background-position: center top;
+  background-size: 100%;
+  background-repeat: no-repeat;
+  min-height: 300px;
+}
+
+.section-tips-from-the-table {
+  background-image: url('/sections/section-tips-from-the-table.jpg');
+  background-position: center top;
+  background-size: 100%;
+  background-repeat: no-repeat;
+  min-height: 400px;
+}
+
+.section-reviews {
+  background-image: url('/sections/section-review.jpg');
+  background-position: center top;
+  background-size: 100%;
+  background-repeat: no-repeat;
+  min-height: 500px;
+}
+
+.section-instagram {
+  background-image: url('/sections/section-instagram.jpg');
+  background-position: center top;
+  background-size: 100%;
+  background-repeat: no-repeat;
+  min-height: 350px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  header,
+  footer,
+  .hero-section,
+  .gallery-section,
+  .services-section,
+  .news-section,
+  .contact-section,
+  .quote-section,
+  .text-section,
+  .image-section,
+  .banner-section {
+    background-attachment: scroll;
+  }
+}

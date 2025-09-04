@@ -7,7 +7,7 @@ interface SanityError extends Error {
 }
 
 const client = createClient({
-  projectId: 'xanklzya',
+  projectId: 'wwwrb2ji',
   dataset: 'production',
   apiVersion: '2024-03-19',
   useCdn: false
@@ -42,6 +42,21 @@ export default defineEventHandler(async (event) => {
         const result = await client.fetch(`
           *[_type == "siteSettings"] | order(_updatedAt desc)[0] {
             ...,
+            // Favicon and app icons
+            favicon {
+              favicon {
+                asset->
+              },
+              faviconPng {
+                asset->
+              },
+              appleTouchIcon {
+                asset->
+              },
+              androidIcon {
+                asset->
+              }
+            },
             // Expand assets for images used across the site
             footerLogos[] {
               ...,
@@ -157,6 +172,43 @@ export default defineEventHandler(async (event) => {
               columns,
               grid
             },
+            sectionImagesContent {
+              enablePadding,
+              items[] {
+                image {
+                  asset-> {
+                    _id,
+                    url,
+                    metadata {
+                      dimensions
+                    }
+                  }
+                },
+                objectFit,
+                alignment,
+                width
+              }
+            },
+            tipsFromTheTableContent {
+              enablePadding
+            },
+            reviewsContent {
+              backgroundColor,
+              textColor,
+              items[] {
+                reviewContent,
+                cite,
+                showStars
+              }
+            },
+            instagramContent {
+              sectionImage { asset-> },
+              linkText,
+              linkUrl,
+              items[] {
+                image { asset-> }
+              }
+            },
             headlineContent {
               headline,
               centerText,
@@ -224,6 +276,13 @@ export default defineEventHandler(async (event) => {
                   metadata { dimensions }
                 }
               },
+              overlayImage {
+                asset-> {
+                  _id,
+                  url,
+                  metadata { dimensions }
+                }
+              },
               roundalImage {
                 asset-> {
                   _id,
@@ -240,7 +299,10 @@ export default defineEventHandler(async (event) => {
                 }
               },
               text,
-              imageRight
+              enableBookingButton,
+              imageRight,
+              backgroundColor,
+              textColor
             },
             nestedContent {
               mainImage {
@@ -332,28 +394,134 @@ export default defineEventHandler(async (event) => {
               }
             },
             textContent {
+              title,
+              image {
+                asset-> {
+                  _id,
+                  url,
+                  metadata {
+                    dimensions
+                  }
+                },
+                alt
+              },
               content,
               columns,
               offset
             },
-            selectedServicesContent {
-              title,
-              services[]-> {
-                _id,
-                title,
+            marqueeContent {
+              linkTitle,
+              linkUrl,
+              repeatCount,
+              marqueeSpeed,
+              reverse
+            },
+            serviceLinksContent {
+              enablePadding,
+              items[] {
                 image {
                   asset-> {
                     _id,
                     url,
-                    mimeType
+                    metadata {
+                      dimensions
+                    }
                   }
                 },
-                description
+                title,
+                linkTitle,
+                url,
+                targetBlank
+              }
+            },
+            dualCarouselContent {
+              leftCarousel[] {
+                _type,
+                asset-> {
+                  _id,
+                  url,
+                  metadata { dimensions }
+                },
+                alt
               },
-              button {
-                text,
-                page-> { slug },
-                url
+              leftOverlay {
+                asset-> {
+                  _id,
+                  url,
+                  metadata { dimensions }
+                },
+                alt
+              },
+              rightCarousel[] {
+                _type,
+                asset-> {
+                  _id,
+                  url,
+                  metadata { dimensions }
+                },
+                alt
+              },
+              rightOverlay {
+                asset-> {
+                  _id,
+                  url,
+                  metadata { dimensions }
+                },
+                alt
+              },
+              carouselSpeed,
+              transitionDuration
+            },
+            singleCarouselContent {
+              carousel[] {
+                _type,
+                asset-> {
+                  _id,
+                  url,
+                  metadata { dimensions }
+                },
+                alt
+              },
+              overlay {
+                asset-> {
+                  _id,
+                  url,
+                  metadata { dimensions }
+                },
+                alt
+              },
+              carouselSpeed,
+              transitionDuration
+            },
+            uspsContent {
+              items[] {
+                image {
+                  asset-> {
+                    _id,
+                    url,
+                    metadata { dimensions }
+                  }
+                },
+                title,
+                description
+              }
+            },
+            serviceContent {
+              service-> {
+                _id,
+                title,
+                description,
+                bookingLink,
+                subservices[] {
+                  title,
+                  duration,
+                  cost
+                }
+              },
+              alignment,
+              testimonial {
+                quote,
+                cite
               }
             }
           }
@@ -521,16 +689,72 @@ export default defineEventHandler(async (event) => {
       const result = await client.fetch(`*[_type == "service"] | order(orderRank){
         _id,
         title,
-        image {
-          asset-> {
-            _id,
-            url,
-            mimeType
-          }
-        },
-        description
+        description,
+        bookingLink,
+        subservices[] {
+          title,
+          duration,
+          cost
+        }
       }`)
       return result
+    }
+
+    if (query.type === 'team') {
+      const result = await client.fetch(`*[_type == "team"] | order(orderRank asc) {
+        _id,
+        name,
+        role,
+        bio,
+        "imageUrl": image.asset->url,
+        "imageAlt": image.alt,
+        orderRank
+      }`)
+      return result
+    }
+    
+    if (query.type === 'tips') {
+      const result = await client.fetch(`
+        *[_type == "tips"] | order(orderRank asc) {
+          title,
+          content,
+          image { asset-> },
+          backgroundImage { asset-> },
+          link {
+            text,
+            url,
+            targetBlank
+          },
+          orderRank
+        }
+      `)
+      return result
+    }
+
+    if (query.type === 'galleries') {
+      return await client.fetch(`
+        *[_type == "gallery"] | order(_createdAt desc) {
+          _id,
+          title,
+          "thumbnail": items[0] {
+            asset->
+          },
+          "itemCount": count(items)
+        }
+      `)
+    }
+
+    if (query.type === 'gallery' && query.id) {
+      return await client.fetch(`
+        *[_type == "gallery" && _id == $id][0] {
+          _id,
+          title,
+          items[] {
+            _type,
+            asset->
+          }
+        }
+      `, { id: query.id })
     }
     
     throw new Error('Invalid query parameters')
