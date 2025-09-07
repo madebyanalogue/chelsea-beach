@@ -1,0 +1,226 @@
+@font-face {
+  font-family: 'Roslinda';
+  src: url('/fonts/RoslindaleDeckNarrowMedium.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Typewriter Regular PRO';
+  src: url('/fonts/Typewriter_Regular_PRO.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+}
+
+
+
+:root {
+  --white: #fff;
+  --black: #000;
+  --dark-grey: #5b5653;
+  --mid-grey: #dfd3cd;
+  --light-grey: #f7efeb;
+  --beige: #dfd3cd;
+  --yellow: #ffdd15;
+  --color-bg: var(--white);
+  --color-text: var(--dark-grey);
+  --color-link: var(--black);
+  --mono-spacing: 0.1em;
+  --arrow-size: 30px;
+  --letterspacing: 0.05em;
+  --letterspacing-small: 0.25em;
+  --letterspacing-medium: 0.5em;
+  --letterspacing-large: 1em;
+  --heading: 'Roslinda', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  --body-font: 'Typewriter Regular PRO', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+.dark-mode, .dark {
+  --color-bg: var(--dark-grey);
+  --color-text: var(--white);
+  --color-link: var(--yellow);
+}
+
+.grey-bg {
+  --color-bg: var(--grey);
+  background: var(--grey);
+}
+.black-text {
+  color: var(--black);
+  --color-text: var(--black);
+}
+
+body {
+  font-family: var(--body-font);
+  line-height: 1.2;
+}
+h1, h2, h3, h4, h5, h6, body {
+  font-family: var(--body-font);
+  font-weight: 400;
+  margin-bottom: 0em;
+}
+
+.rte > *:not(:last-child) {
+  margin-bottom: var(--pad-1);
+}
+
+.button {
+  border: 1px solid var(--color-text);
+  border-radius: 0;
+  text-decoration: none;
+  text-align: center;
+  overflow: hidden;
+  position: relative;
+  display: inline-block;
+  border-radius: 50px;
+  padding: calc(var(--body) * .5) calc(var(--body) * 1.25) calc(var(--body) * .3);
+  font-size: var(--body);
+}
+.button:hover {
+  background: var(--color-text);
+  color: var(--color-bg);
+}
+
+.heading {
+  font-weight: 400;
+  letter-spacing: 0px;
+  font-family: var(--heading);
+}
+
+
+
+.arrow {
+  display: inline-block;
+  width: var(--arrow-size);
+  height: var(--arrow-size);
+  transform-origin: center;
+  position:relative;
+  transition: transform 0.6s ease;
+}
+*:hover > .arrow {
+  transform: scaleX(.75);
+}
+.arrow:before, 
+.arrow:after {
+  content: '';
+  display: block;
+}
+.arrow:before {
+  width: var(--arrow-size);
+  height: var(--arrow-size);
+  left: calc(var(--arrow-size) / 2 - 1px);
+  top: 0px;
+  border-left: 1px solid currentColor;
+  position: absolute
+}
+.arrow:after {
+  width: calc(var(--arrow-size) / 1.75);
+  height: calc(var(--arrow-size) / 1.75);
+  left: calc(var(--arrow-size) / 5);
+  top: calc(var(--arrow-size) / 10);
+  border-bottom: 1px solid currentColor;
+  border-left: 1px solid currentColor;
+  transform: rotate(135deg);
+  position: absolute;
+  transform-origin: center;
+}
+.arrow.arrow-right {
+  transform: rotate(90deg) scaleX(.75);
+}
+
+
+/* ---------------------------------
+LARGE TITLES
+--------------------------------- */ 
+
+
+.h1     { line-height: 1.0; }
+.h2     { line-height: 1.2; }
+.h3     { line-height: 1.125; }
+.h4     { line-height: 1.2; }
+.h5     { line-height: 1.2; }
+.h6     { line-height: 1.2; }
+.h7     { line-height: 1.2; }
+body    { line-height: 1.2; }
+.rte    { line-height: 1.2; }
+
+.h0, .rte .h0 { font-size: var(--h0); }
+.h1, .rte h1 { font-size: var(--h1); }
+.h2, .rte h2 { font-size: var(--h2); }
+.h3, .rte h3 { font-size: var(--h3); }
+.h4, .rte h4 { font-size: var(--h4); }
+.h5, .rte h5 { font-size: var(--h5); }
+.h6, .rte h6 { font-size: var(--h6); }
+.h7, .rte h7 { font-size: var(--h7); }
+body { font-size: clamp(14px, var(--body), 27px); 
+letter-spacing: var(--letterspacing);
+}
+
+:root {
+  --unit: 2vw;
+  --unit-reference: 1600;
+  --h0: 4.7vw;
+  --h1: calc((48 / (var(--unit-reference) / 100)) * var(--unit));
+  --h2: calc((35 / (var(--unit-reference) / 100)) * var(--unit));
+  --h3: calc((32 / (var(--unit-reference) / 100)) * var(--unit));
+  --h4: clamp(14px, calc((25 / (var(--unit-reference) / 100)) * var(--unit)), 80px);
+  --h5: clamp(14px, calc((21 / (var(--unit-reference) / 100)) * var(--unit)), 80px);
+  --h6: clamp(14px, calc((16 / (var(--unit-reference) / 100)) * var(--unit)), 80px);
+  --h7: clamp(11px, calc((12 / (var(--unit-reference) / 100)) * var(--unit)), 80px);
+  --body: clamp(15px, calc((19 / (var(--unit-reference) / 100)) * var(--unit)), 80px);
+}
+
+h1, h2, h3, h4, h5, h6, h7 {
+  font-weight: 400;
+}
+
+@media all and (min-width:768px) {
+  :root {
+      --unit: 20px;
+      --unit: 2vw;
+    }
+}
+
+@media all and (min-width:1024px) {
+    :root {
+        --unit: 1vw;
+    }
+}
+
+@media all and (min-width:2000px) {
+  :root {
+    --unit: 20px;
+  }
+}
+
+.medium {
+  font-weight: 500;
+}
+.text-center {
+  text-align: center;
+}
+
+
+
+
+.uppercase {
+  text-transform:uppercase;
+}
+.small-spacing {
+  letter-spacing: var(--letterspacing-small);
+}
+.medium-spacing {
+  letter-spacing: var(--letterspacing-medium);
+}
+.large-spacing {
+  letter-spacing: var(--letterspacing-large);
+}
+.transform-none {
+  text-transform: none;
+}
+.sanity-blocks {
+  font-weight: 400;
+}
+.sanity-blocks strong, .sanity-blocks b {
+  font-weight: 700;
+}

@@ -1,0 +1,640 @@
+@import './dev-backgrounds.css';
+
+:root {
+  --logo-height: 10px;
+  --header-height: calc(calc(var(--pad-1) * 5));
+  --initial-bg-light: var(--white);
+  --initial-bg-dark: var(--black);
+  --initial-bg: var(--initial-bg-light);
+  /* Global animation timings */
+  --fade-duration: 500ms;
+  --fade-stagger: 120ms;
+  --fade-initial-delay: 200ms;
+  --header-height: 65px;
+
+
+  --gap: 25px;
+  --gap-md: 50px;
+  --pad: 25px;
+  --pad-md: 50px;
+
+  --marquee-text-color: var(--dark-grey);
+  --marquee-hover-color: var(--black);
+  --marquee-background: var(--yellow);
+}
+
+@media (min-width: 768px) {
+  :root {
+    --logo-height: 21px;
+  }
+}
+@media (min-width: 1024px) {
+  :root {
+    
+  }
+}
+
+
+
+#logo svg {
+  width: auto;
+  display:block;
+  height: var(--logo-height);
+}
+
+
+footer {
+  --color: var(--dark-grey);
+  --background-color: var(--white);
+  background-color: var(--background-color);
+  color: var(--color);
+}
+
+/* Page transition fade */
+.page-enter-active { transition: opacity 500ms ease; }
+.page-leave-active { transition: opacity 200ms ease; }
+.page-enter-from,
+.page-leave-to {
+  opacity: 0;
+}
+.page-enter-to,
+.page-leave-from {
+  opacity: 1;
+}
+
+/* Hide footer during page transitions to prevent layout shifts */
+.page-container.page-enter-active footer,
+.page-container.page-leave-active footer {
+  opacity: 0 !important;
+  pointer-events: none;
+}
+:root.dark-mode {
+  --initial-bg: var(--initial-bg-dark);
+}
+
+
+html {
+  background-color: var(--initial-bg-light);
+}
+
+html.dark-mode {
+  background-color: var(--initial-bg-dark);
+  color: var(--white);
+}
+
+.page-container {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+
+body {
+  background-color: var(--initial-bg-light);
+}
+.dark-mode body {
+  background-color: var(--initial-bg-dark);
+}
+
+section, footer, header {
+  --color-bg: var(--white);
+  --color-text: var(--dark-grey);
+  background-color: var(--color-bg);
+  color: var(--color-text);
+}
+.dark-mode section {
+  --color-bg: var(--dark-grey);
+  --color-text: var(--white);
+}
+
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9000;
+  width: 100%;
+  pointer-events: none;
+}
+header.menu-active {
+  pointer-events: all;
+}
+header a, header button {
+  pointer-events: auto;
+}
+
+.page-builder {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0px;
+}
+
+.logo {
+  max-width: var(--logo-width);
+}
+.logo svg {
+ width: 100%;
+ display: inline-block;
+}
+.logo svg > * {
+  fill: currentColor;
+}
+
+
+.icon--logo {
+  transform: translateX(-50%);
+}
+
+
+
+
+
+
+/* Button styles moved to typography.css */
+
+
+
+
+
+
+#__nuxt {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column; 
+}
+
+main {
+  flex: 1 0 auto;
+  /* Optional: add padding or margin as needed */
+  padding-top: calc(var(--header-height) + calc(calc(var(--h6) * 2.6))) !important;
+}
+
+
+
+.roundal {
+  animation: none; /* Disabled until preloader is ready */
+}
+
+body.preloader-ready .roundal {
+  animation: rotate 10s linear infinite;
+}
+
+
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.hero-text-content svg {
+  width:100%;
+  height: 100%;
+  object-fit: contain;
+  max-width: unset;
+}
+
+
+
+/* Button hover styles are now loaded directly in nuxt.config.ts */
+
+/* Prevent flash of content before preloader */
+body {
+  overflow: hidden;
+  background-color: var(--initial-bg-light);
+}
+
+/* Disable all animations and transitions until preloader is ready */
+body:not(.preloader-ready) * {
+  animation: none !important;
+  transition: none !important;
+}
+
+/* Navigation animations work immediately */
+/* .navigation *,
+.hamburger-nav *,
+[data-navigation-status] * {
+  animation: unset !important;
+  transition: unset !important;
+} */
+
+/* Re-enable animations when preloader is ready */
+/* body.preloader-ready * {
+  animation: unset;
+  transition: unset;
+} */
+
+
+
+body.preloader-complete {
+  overflow: auto;
+}
+
+/* Section trigger styles for debugging */
+/* .section-trigger {
+  position: absolute !important;
+  top: 50% !important;
+  left: 0 !important;
+  width: 40px !important;
+  height: 2px !important;
+  background-color: red !important;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 1000 !important;
+  pointer-events: none;
+}
+
+.section-trigger.visible {
+  opacity: 0 !important;
+} */
+
+/* Dark mode body background */
+:root.dark-mode body {
+  background-color: var(--initial-bg-dark);
+}
+
+
+/* Directional Button Hover Effects */
+
+/* Base button structure - only for elements with data-btn-hover */
+[data-btn-hover] {
+  border: 1px solid var(--color-text);
+  border-radius: 0;
+  text-decoration: none;
+  text-align: center;
+  overflow: hidden;
+  position: relative;
+  display: inline-block;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  border-radius: 50px;
+  padding: calc(var(--h6) * .6) calc(var(--h6) * 1.8);
+  font-size: var(--h6);
+  font-family: var(--mono);
+  letter-spacing: var(--mono-spacing);
+  white-space: nowrap; 
+  /* Create a new stacking context */
+  isolation: isolate;
+  cursor: pointer;
+}
+
+/* Button text */
+[data-btn-hover] .btn__text {
+  position: relative;
+  z-index: 2;
+  transition: color 0.7s cubic-bezier(0.625, 0.05, 0, 1);
+  /* Inherit button text styling */
+  color: var(--color-text);
+  font-size: var(--h6);
+  font-family: var(--mono);
+  letter-spacing: var(--mono-spacing);
+  text-transform: uppercase;
+}
+
+/* Button background */
+[data-btn-hover] .btn__bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: transparent;
+  z-index: 1;
+}
+
+/* Hover circle */
+[data-btn-hover] .btn__circle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  transform: translate(-50%, -50%) scale(0) rotate(0.001deg);
+  transition: transform 0.7s cubic-bezier(0.625, 0.05, 0, 1), background-color 0.4s cubic-bezier(0.625, 0.05, 0, 1);
+  z-index: 1;
+  pointer-events: none;
+  background-color: var(--color-text);
+}
+
+/* Hover state */
+[data-btn-hover]:hover .btn__circle {
+  transform: translate(-50%, -50%) scale(1) rotate(0.001deg);
+  /* JavaScript controls the size dynamically */
+}
+
+[data-btn-hover]:hover .btn__text {
+  color: var(--white) !important;
+}
+
+/* Theme variations can be added later if needed */
+
+/* Additional theme variations can be added here if needed */
+
+/* Responsive adjustments */
+@media (min-width: 768px) {
+  [data-btn-hover] {
+    min-width: 200px;
+  }
+}
+
+/* Focus states for accessibility */
+[data-btn-hover]:focus {
+  outline: 2px solid var(--color-text);
+  outline-offset: 2px;
+}
+
+/* Disabled state */
+[data-btn-hover]:disabled,
+[data-btn-hover][disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+[data-btn-hover]:disabled:hover .btn__circle,
+[data-btn-hover][disabled]:hover .btn__circle {
+  transform: translate(-50%, -50%) scale(0) rotate(0.001deg);
+}
+
+
+
+.navigation {
+	z-index: 1005;
+	pointer-events: auto; /* allow clicks to bubble */
+	position: fixed;
+	inset: 0;
+	pointer-events: none;
+	    height: 100vh;
+}
+
+.navigation__dark-bg {
+	transition: all 0.7s cubic-bezier(0.5, 0.5, 0, 1);
+	opacity: 0;
+	pointer-events: auto;
+	visibility: hidden;
+	background-color: #000;
+	position: absolute;
+	inset: 0;
+}
+
+[data-navigation-status="active"] .navigation__dark-bg {
+	opacity: 0.15;
+	visibility: visible;
+}
+
+.hamburger-nav {
+	border-radius: 1.5em;
+	position: absolute;
+	top: var(--pad-1);
+	right: var(--pad-2);
+	pointer-events: auto; /* ensure clicks register even though parent has pointer-events:none */
+	z-index: 1004; /* above dark bg and header */
+}
+
+.hamburger-nav__bg {
+	transition: all 0.7s cubic-bezier(0.5, 0.5, 0, 1);
+	background-color: rgba(230,230,230,0.8);
+  backdrop-filter: blur(30px);
+	border-radius: 1.75em;
+	width: 3.5em;
+	height: 3.5em;
+	position: absolute;
+	top: 0;
+	right: 0;
+	pointer-events: none; /* do not block clicks on the toggle */
+}
+
+[data-navigation-status="active"] .hamburger-nav__bg {
+	width: 100%;
+	height: 100%;
+}
+
+.hamburger-nav__group {
+	transition: all 0.5s cubic-bezier(0.5, 0.5, 0, 1), transform 0.7s cubic-bezier(0.5, 0.5, 0, 1);
+	grid-column-gap: 1em;
+	grid-row-gap: 1em;
+	pointer-events: auto;
+	transform-origin: 100% 0;
+	flex-flow: column;
+	padding: 2.25em 2.5em 2em 2em;
+	display: flex;
+	position: relative;
+	transform: scale(0.15) rotate(0.001deg);
+	opacity: 0;
+	visibility: hidden;
+}
+
+[data-navigation-status="active"] .hamburger-nav__group {
+	transform: scale(1) rotate(0.001deg);
+	opacity: 1;
+	visibility: visible;
+}
+
+.hamburger-nav__menu-p {
+	opacity: .5;
+	letter-spacing: .1em;
+	text-transform: uppercase;
+	margin-bottom: 0;
+	font-family: var(--mono);
+	font-size: 1em;
+	font-weight: 400;
+}
+
+.hamburger-nav__ul {
+	grid-column-gap: .375em;
+	grid-row-gap: .375em;
+	flex-flow: column;
+	margin-top: 0;
+	margin-bottom: 0;
+	padding: 0;
+	display: flex;
+	position: relative;
+}
+
+.hamburger-nav__li {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.hamburger-nav__a {
+	color: #131313;
+	justify-content: space-between;
+	align-items: center;
+	text-decoration: none;
+	display: flex;
+	position: relative;
+}
+
+.hamburger-nav__a[aria-current] .hamburger-nav__p {
+	opacity: 0.33;
+}
+
+.hamburger-nav__p {
+	white-space: nowrap;
+	margin-bottom: 0;
+	padding-right: 1.25em;
+	font-size: 2em;
+}
+
+.hamburger-nav__dot {
+	transition: all 0.7s cubic-bezier(0.5, 0.5, 0, 1);
+	background-color: currentColor;
+	border-radius: 50%;
+	flex-shrink: 0;
+	width: .5em;
+	height: .5em;
+	transform: scale(0) rotate(0.001deg);
+	opacity: 0.5;
+}
+
+.hamburger-nav__a[aria-current] .hamburger-nav__dot {
+	transform: scale(1) rotate(0.001deg);
+	opacity: 1;
+}
+
+.hamburger-nav:has(.hamburger-nav__a:hover) .hamburger-nav__dot {
+	transform: scale(0) rotate(0.001deg);
+}
+
+.hamburger-nav .hamburger-nav__a:hover .hamburger-nav__dot {
+	transform: scale(1) rotate(0.001deg);
+	opacity: 0.25;
+}
+
+.hamburger-nav__toggle {
+	transition: transform 0.7s cubic-bezier(0.5, 0.5, 0, 1);
+	pointer-events: auto;
+	cursor: pointer;
+	border-radius: 50%;
+	justify-content: center;
+	align-items: center;
+	width: 3.5em;
+	height: 3.5em;
+	display: flex;
+	position: absolute;
+	top: 0;
+	right: 0;
+	transform: translate(0em, 0em) rotate(0.001deg);
+	z-index: 1001; /* above header icons */
+}
+
+[data-navigation-status="active"] .hamburger-nav__toggle {
+	transform: translate(-1em, 1em) rotate(0.001deg);
+}
+
+.hamburger-nav__toggle-bar {
+	transition: transform 0.7s cubic-bezier(0.5, 0.5, 0, 1);
+	background-color: #131313;
+	width: 40%;
+	height: .125em;
+	position: absolute;
+	transform: translateY(-0.15em) rotate(0.001deg);
+}
+
+.hamburger-nav__toggle:hover .hamburger-nav__toggle-bar {
+	transform: translateY(0.15em) rotate(0.001deg);
+}
+
+[data-navigation-status="active"] .hamburger-nav__toggle .hamburger-nav__toggle-bar {
+	transform: translateY(0em) rotate(45deg);
+}
+
+.hamburger-nav__toggle .hamburger-nav__toggle-bar:nth-child(2) {
+	transition: transform 0.7s cubic-bezier(0.5, 0.5, 0, 1);
+	transform: translateY(0.15em) rotate(0.001deg);
+}
+
+.hamburger-nav__toggle:hover .hamburger-nav__toggle-bar:nth-child(2) {
+	transform: translateY(-0.15em) rotate(0.001deg);
+}
+
+[data-navigation-status="active"] .hamburger-nav__toggle .hamburger-nav__toggle-bar:nth-child(2) {
+	transform: translateY(0em) rotate(-45deg);
+}
+
+
+.image-overlay-container {
+  width:100%;
+}
+
+/* Subfooter reveal defaults */
+#subfooter {
+  transform-origin: bottom;
+  transform: scaleY(0);
+}
+#subfooter .wrapper {
+  opacity: 0;
+}
+
+/* Page transition handling */
+.page-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+main > div, .page-container main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+.page-builder {
+  flex: 1;
+}
+
+/* Page title fade transition effect */
+.page-title {
+  transition: opacity 0.3s ease;
+  font-size: 16px;
+  text-transform: uppercase;
+}
+
+/* Generic fade-in utility controlled by data attribute */
+[data-fade-in] { opacity: 0; }
+[data-fade-in].is-visible { opacity: 1; }
+
+/* Override inline transition styles for fade-in elements */
+[data-fade-in] {
+  transition: opacity var(--fade-duration) ease !important;
+  opacity: 0;
+}
+
+[data-fade-in].is-visible {
+  opacity: 1;
+}
+
+
+
+.section-service + .section-service .service-content-container  {
+  padding-top:0px;
+}
+
+
+.underline-links a, .underline-link {
+  position: relative;
+  display: inline-block;
+  text-decoration: none !important;
+}
+.underline-links a:after, .underline-link:after {
+  content: '';
+  position: absolute;
+  bottom: 1px;
+  left: 0;
+  width: 0%;
+  height: 1px;
+  background-color: var(--color-text);
+  transition: width 0.3s ease;
+}
+.underline-links a:hover:after, .underline-link:hover:after {
+  width: 100%;
+}
+.underline-links.reverse a:after, .underline-link.reverse:after {
+  width: 100%;
+  transform-origin: right;
+}
+.underline-links.reverse a:hover:after, .underline-link.reverse:hover:after {
+  width: 0%;
+}

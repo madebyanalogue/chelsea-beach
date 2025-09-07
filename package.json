@@ -1,0 +1,30 @@
+{
+  "name": "chelsea-beach",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "dev:clean": "rm -rf .nuxt .output node_modules/.cache && nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare",
+    "start": "nuxt start"
+  },
+  "dependencies": {
+    "@nuxt/image": "^1.11.0",
+    "@nuxt/scripts": "^0.11.6",
+    "@nuxtjs/sanity": "^1.13.3",
+    "@nuxtjs/tailwindcss": "^6.14.0",
+    "@portabletext/vue": "^1.0.12",
+    "@sanity/client": "^6.29.1",
+    "@sanity/image-url": "^1.1.0",
+    "@sanity/vision": "^3.89.0",
+    "@unhead/vue": "^2.0.8",
+    "better-sqlite3": "^12.2.0",
+    "gsap": "^3.13.0",
+    "nuxt": "^3.17.2",
+    "vue": "^3.5.13",
+    "vue-router": "^4.5.1"
+  }
+}

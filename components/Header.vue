@@ -1,0 +1,354 @@
+<template>
+
+
+  <header ref="headerRef">
+
+    <SectionMarquee />
+  
+    <div class="header-bar flex flex-row flex-center flex-middle px2">
+      <div class="header-left">
+        <div class="page-title-container">
+          <div class="page-title mono" :data-page-title="pageTitle" ref="pageTitleRef">{{ displayTitle }}</div>
+        </div>
+      </div>
+      <NuxtLink
+        v-if="!pageData?.hideHeaderLogo"
+        to="/"
+        class="logo-center"
+      >
+        <div id="logo">
+          <Logotype />
+        </div>
+      </NuxtLink>
+      <div v-else class="logo-center">
+        <div class="logo">
+          <!-- Empty div to maintain layout when logo is hidden -->
+        </div>
+      </div>
+      
+      <div class="header-right flex flex-row flex-center">
+        <MobileMenu 
+          :is-open="menuOpen" 
+          @close-menu="closeMenu" 
+        />
+        <MenuButton :is-active="menuOpen" @toggle-menu="toggleMenu" />
+      </div>
+
+    </div>
+  </header>
+</template>
+
+<script setup>
+import { ref, computed, onMounted, onUnmounted, nextTick, watch } from 'vue';
+import { gsap } from 'gsap';
+import { useRoute } from '#app';
+import { useHeaderScroll } from '~/composables/useHeaderScroll';
+import { useSiteSettings } from '~/composables/useSiteSettings';
+import Logo from '~/components/Logo.vue';
+import MenuButton from '~/components/MenuButton.vue';
+import MobileMenu from '~/components/MobileMenu.vue';
+
+const props = defineProps({
+  pageData: {
+    type: Object,
+    required: false,
+    default: null
+  }
+});
+
+// Header animation state
+const headerAnimated = ref(false)
+
+const route = useRoute();
+const headerRef = ref(null);
+const { isHeaderVisible } = useHeaderScroll()
+const { settings: siteSettings } = useSiteSettings()
+
+// Website title from Sanity
+const websiteTitle = computed(() => siteSettings.value?.title || 'Chelsea Beach')
+
+// Deprecated local menu control (kept for layout logic only)
+const menuOpen = ref(false)
+const isAnimating = ref(false)
+
+// Simple computed property for page title
+const pageTitle = computed(() => {
+  // Use the page title from Sanity if available
+  if (props.pageData?.title) {
+    return props.pageData.title;
+  }
+  
+  // Fallback to route meta (for older pages)
+  if (route.meta.pageTitle) {
+    return route.meta.pageTitle;
+  }
+  
+  // Default to 'Home' for the root path
+  if (route.path === '/') {
+    return 'Home';
+  }
+  
+  return '';
+});
+
+const displayTitle = ref('');
+const pageTitleRef = ref(null);
+
+// Watch for page title changes and let the plugin handle transitions
+watch(pageTitle, (newTitle) => {
+  // Initialize displayTitle if it's empty
+  if (!displayTitle.value && newTitle) {
+    displayTitle.value = newTitle
+  }
+  
+  if (pageTitleRef.value) {
+    // Let the plugin handle the transition
+    if (window.handlePageTitleTransition) {
+      window.handlePageTitleTransition(newTitle, pageTitleRef.value, displayTitle)
+    } else {
+      // Fallback: update immediately if plugin not ready
+      displayTitle.value = newTitle
+    }
+  } else {
+    // If ref not available yet, just update the display title
+    displayTitle.value = newTitle
+  }
+}, { immediate: true })
+
+// Initialize displayTitle with current page title
+onMounted(() => {
+  if (!displayTitle.value && pageTitle.value) {
+    displayTitle.value = pageTitle.value
+  }
+})
+
+const updateHeights = () => {
+  if (headerRef.value) {
+    const headerHeight = headerRef.value.offsetHeight;
+    //document.body.style.setProperty('--header-height', `${headerHeight}px`);
+  }
+};
+
+const initializeMomentumHover = () => {
+  if (typeof window !== 'undefined' && window.initializeMomentumHover) {
+    console.log('🔴 [Header] Calling momentum hover initialization...')
+    window.initializeMomentumHover()
+  } else {
+    console.log('🔴 [Header] Momentum hover function not available')
+  }
+}
+
+
+onMounted(() => {
+  window.addEventListener('resize', updateHeights);
+  nextTick(updateHeights);
+
+  // Watch for title changes
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      if (mutation.type === 'childList' && mutation.target.tagName === 'TITLE') {
+        // Title changed
+      }
+    });
+  });
+
+  const titleElement = document.querySelector('title');
+  if (titleElement) {
+    observer.observe(titleElement, { childList: true });
+  }
+
+  onUnmounted(() => {
+    window.removeEventListener('resize', updateHeights);
+    observer.disconnect();
+  });
+});
+
+watch(() => route.path, () => {
+  nextTick(updateHeights);
+});
+
+// Watch for header visibility changes and animate smoothly
+watch(isHeaderVisible, (newValue) => {
+  if (headerRef.value && headerAnimated.value) {
+    if (newValue) {
+      // Animate header in
+      gsap.to(headerRef.value, {
+        y: '0%',
+        opacity: 1,
+        duration: 0.4,
+        ease: 'power2.out'
+      })
+    } else {
+      // Animate header out
+      gsap.to(headerRef.value, {
+        y: '-100%',
+        opacity: 0.8,
+        duration: 0.4,
+        ease: 'power2.in'
+      })
+    }
+  }
+})
+
+// Menu functions
+const toggleMenu = () => {
+  if (isAnimating.value) return
+  
+  if (!menuOpen.value) {
+    openMenu()
+  } else {
+    closeMenu()
+  }
+}
+
+const openMenu = () => {
+  isAnimating.value = true
+  menuOpen.value = true
+  
+  // Stop scrolling
+  document.body.style.overflow = 'hidden'
+  
+  setTimeout(() => {
+    isAnimating.value = false
+  }, 300)
+}
+
+const closeMenu = () => {
+  isAnimating.value = true
+  
+  setTimeout(() => {
+    menuOpen.value = false
+    isAnimating.value = false
+    document.body.style.overflow = ''
+  }, 300)
+}
+</script>
+
+<style scoped>
+
+
+
+.header-bar {
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  transition: background 0.3s ease, color 0.3s ease;
+  justify-content: space-between;
+  display:grid;
+  grid-template-areas:
+        "leftTop right"
+        "leftBottom right";
+  gap: 10px;
+  height: var(--header-height);
+  grid-template-rows: auto;
+  /* Initial state will be handled entirely by GSAP */
+}
+@media all and (min-width: 1024px) {
+  .header-bar {
+    grid-template-areas:
+        "left center right";
+    grid-template-columns: 1fr auto 1fr;
+    gap: 10px;
+    grid-template-rows: auto;
+  }
+}
+.header-bar.dark {
+  color: var(--color-text, #fff);
+  background: transparent;
+}
+.header-bar.header-hidden {
+  /* This will be handled by GSAP for smooth transitions */
+}
+.header-left, .header-right {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+.logo-center {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  grid-area: leftTop;
+  margin-left: calc(var(--pad-1) * -0.12);
+}
+@media all and (min-width: 1024px) {
+  .logo-center {
+    grid-area: center;
+    margin-left: calc(var(--pad-1) * -0);
+  }
+  
+}
+.logo {
+  z-index: 1003;
+  position: relative;
+}
+
+
+.header-left {
+  justify-content: flex-start;
+  grid-area: leftBottom;
+}
+@media all and (min-width: 1024px) {
+  .header-left {
+    grid-area: left;
+  }
+}
+.header-right {
+  justify-content: flex-end;
+  grid-area: right;
+  align-self: stretch;
+}
+
+.hamburger {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 1002;
+}
+
+.hamburger span {
+  display: block;
+  width: 28px;
+  height: 2px;
+  background: currentColor;
+  border-radius: 0px;
+  transition: all 0.3s;
+}
+
+.hamburger span.open:nth-child(1) {
+  transform: rotate(45deg) translate(5px, 5px);
+}
+
+.hamburger span.open:nth-child(2),
+.hamburger span:nth-child(2) {
+  opacity: 0;
+}
+
+.hamburger span.open:nth-child(3) {
+  transform: rotate(-45deg) translate(5px, -5px);
+}
+
+.hamburger.menu-active span {
+  background: white;
+}
+
+/* Replacing the previous CSS rule for .header-bar.no-transform-transition */
+.header-bar.no-transform-transition {
+  transition: none !important;
+  transition: background 0.3s, color 0.3s !important;
+}
+
+.page-title {
+  display: flex;
+  align-items: center;
+}
+
+
+</style> 
