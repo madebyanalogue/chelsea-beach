@@ -32,7 +32,7 @@ defineEmits(['toggle-menu'])
   border: none;
   cursor: pointer;
   color: inherit;
-  padding: 0.5em;
+  padding: 0em;
   display: flex;
   align-items: center;
   justify-content: center;

@@ -1,16 +1,15 @@
 @import './dev-backgrounds.css';
 
 :root {
-  --logo-height: 10px;
-  --header-height: calc(calc(var(--pad-1) * 5));
+  --logo-height: 14px;
+  --header-height: 55px;
   --initial-bg-light: var(--white);
   --initial-bg-dark: var(--black);
   --initial-bg: var(--initial-bg-light);
   /* Global animation timings */
-  --fade-duration: 500ms;
-  --fade-stagger: 120ms;
-  --fade-initial-delay: 200ms;
-  --header-height: 65px;
+  --fade-duration: 600ms;
+  --fade-stagger: 200ms;
+  --fade-initial-delay: 100ms;
 
 
   --gap: 25px;
@@ -23,16 +22,13 @@
   --marquee-background: var(--yellow);
 }
 
-@media (min-width: 768px) {
+@media (min-width: 800px) {
   :root {
     --logo-height: 21px;
+    --header-height: 65px;
   }
 }
-@media (min-width: 1024px) {
-  :root {
-    
-  }
-}
+/* Removed empty :root ruleset at 1024px */
 
 
 
@@ -51,8 +47,8 @@ footer {
 }
 
 /* Page transition fade */
-.page-enter-active { transition: opacity 500ms ease; }
-.page-leave-active { transition: opacity 200ms ease; }
+.page-enter-active { transition: opacity 2000ms ease; }
+.page-leave-active { transition: opacity 1000ms ease; }
 .page-enter-from,
 .page-leave-to {
   opacity: 0;
@@ -62,12 +58,7 @@ footer {
   opacity: 1;
 }
 
-/* Hide footer during page transitions to prevent layout shifts */
-.page-container.page-enter-active footer,
-.page-container.page-leave-active footer {
-  opacity: 0 !important;
-  pointer-events: none;
-}
+/* Let the global page transition fade everything together (main + footer) */
 :root.dark-mode {
   --initial-bg: var(--initial-bg-dark);
 }
@@ -101,9 +92,18 @@ section, footer, header {
   background-color: var(--color-bg);
   color: var(--color-text);
 }
-.dark-mode section {
-  --color-bg: var(--dark-grey);
-  --color-text: var(--white);
+body {
+  --section-bg: var(--white);
+  --section-text: var(--dark-grey);
+}
+section {
+  background-color: var(--section-bg);
+  color: var(--section-text);
+  transition: background-color 1s ease;
+}
+.dark-mode {
+  --section-bg: var(--dark-grey);
+  --section-text: var(--white);
 }
 
 header {
@@ -141,9 +141,20 @@ header a, header button {
 
 
 .icon--logo {
-  transform: translateX(-50%);
+  width: 60px;
 }
 
+@media (min-width: 800px) {
+  .icon--logo {
+    width: 100px;
+    transform: translateX(-50%);
+  }
+}
+@media (min-width: 1024px) {
+  .icon--logo {
+    width: unset;
+  }
+}
 
 
 
@@ -527,7 +538,7 @@ body.preloader-complete {
 
 .hamburger-nav__toggle-bar {
 	transition: transform 0.7s cubic-bezier(0.5, 0.5, 0, 1);
-	background-color: #131313;
+	background-color: currentColor;
 	width: 40%;
 	height: .125em;
 	position: absolute;
@@ -587,10 +598,24 @@ main > div, .page-container main {
 
 /* Page title fade transition effect */
 .page-title {
-  transition: opacity 0.3s ease;
   font-size: 16px;
   text-transform: uppercase;
 }
+
+/* Global GSAP slider base styles (used across components) */
+.gsap-slider { display: flex; flex-flow: column; align-items: center; width: 100%; position: relative; overflow: hidden; }
+.gsap-slider__collection { width: 100%; z-index:0; }
+.gsap-slider__list { display: flex; will-change: transform; -webkit-user-select: none; user-select: none; touch-action: pan-x; backface-visibility: hidden; }
+.gsap-slider__item { width: calc(((100% - 1px) - (var(--slider-spv, 1.15) - 1) * var(--slider-gap, 0.01em)) / var(--slider-spv, 1.15)); margin-right: var(--slider-gap, 0.01em); flex: none; }
+.carousel-card { position: relative; width: 100%; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+.before__125 { padding-top: 133%; }
+.carousel-media { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; }
+.carousel-image, .carousel-video { width: 100%; height: 100%; object-fit: cover; object-position: center; display: block; }
+[data-gsap-slider-item]:last-child { margin-right: 0; }
+.gsap-slider__controls { position: absolute; top: 50%; transform: translateY(-50%); width: 100%; padding: 0 var(--pad-2); display: flex; justify-content: space-between; pointer-events: none; }
+.gsap-slider__control { opacity: 0; pointer-events: auto; color: var(--yellow); background: transparent; border: 1px solid var(--yellow); border-radius: 50%; width: 70px; height: 70px; display: flex; align-items: center; justify-content: center; transition: opacity 0.3s ease; }
+.gsap-slider__control[data-gsap-slider-control-status="active"] { opacity: 1; }
+[data-gsap-slider-status="not-active"] [data-gsap-slider-controls] { display: none; }
 
 /* Generic fade-in utility controlled by data attribute */
 [data-fade-in] { opacity: 0; }
@@ -604,6 +629,80 @@ main > div, .page-container main {
 
 [data-fade-in].is-visible {
   opacity: 1;
+}
+
+
+.gsap-slider__controls {
+  justify-content: between;
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  top:50%;
+  transform: translateY(-50%);
+  width: 100%;
+  padding: 0 var(--pad-2);
+  position: absolute;
+  pointer-events: none;
+}
+
+
+.gsap-slider__control {
+  opacity: 0;
+  color: var(--yellow);
+  background-color: transparent;
+  border: 1px solid var(--yellow);
+  border-radius: 50%;
+  width: 70px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.3s ease;
+}
+@media (min-width: 1024px) {
+  .gsap-slider__control {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+*[data-gsap-slider-control="next"] {
+  transform: rotate(90deg);
+}
+
+*[data-gsap-slider-control="prev"] {
+  transform: rotate(-90deg);
+}
+
+[data-gsap-slider-status="not-active"] [data-gsap-slider-controls] {
+  display: none;
+}
+
+[data-gsap-slider-control-status="not-active"] { 
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Customization */
+
+.gsap-slider__control {
+  transition: opacity 0.3s ease;
+}
+
+.demo-card {
+  transition: all 0.3s ease;
+}
+
+[data-gsap-slider-item-status="not-active"] .demo-card {
+  background-color: #131313;
+}
+
+.demo-card__tag {
+  transition: all 0.3s ease;
+}
+
+[data-gsap-slider-item-status="not-active"] .demo-card__tag {
+  opacity: 0;
 }
 
 

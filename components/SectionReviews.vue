@@ -1,7 +1,7 @@
 <template>
-  <section class="section-reviews" :style="{ backgroundColor: `var(--${backgroundColor})`, color: `var(--${textColor})` }">
+  <section class="section-reviews" :style="{ '--section-bg': `var(--${backgroundColor})`, '--section-text': `var(--${textColor})` }">
     <div class="wrapper">
-      <div class="reviews-container py4">
+      <div class="reviews-container py2 py-sm-4">
         <div class="grid grid-4">
           <div
             v-for="(review, index) in items"
@@ -83,7 +83,7 @@ const getReviewClass = (index) => {
 }
 
 .review-stars svg {
-  width:calc(var(--pad-1) * 6);
+  width:calc(var(--pad-1) * 4);
   margin:0 auto;
   display:block;
 }
@@ -92,6 +92,9 @@ const getReviewClass = (index) => {
 }
 
 /* Responsive adjustments */
-@media (max-width: 768px) {
+@media (min-width: 1024px) {
+.review-stars svg {
+  width:calc(var(--pad-1) * 6);
+}
 }
 </style>

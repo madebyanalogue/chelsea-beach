@@ -2,7 +2,7 @@
   <section class="section-single-carousel" 
     :class="{
         'py2': enablePaddingTopBottom,
-        'px2': enablePaddingLeftRight
+        'px1 px-sm-2': enablePaddingLeftRight
       }">
     <!-- Top Background Section -->
     <div 
@@ -14,27 +14,60 @@
     <div 
       class="single-carousel-container"
     >
+      <!-- Fixed Background Mode -->
       <div 
-        v-if="carouselImages.length > 1" 
-        class="carousel-container"
-        :style="{ '--carousel-speed': `${carouselSpeed}s`, '--transition-duration': `${transitionDuration}s` }"
-      >
+        v-if="enableFixedBackground && carouselImages.length > 0"
+        class="fixed-background"
+        :style="{
+          backgroundImage: `url(${getMediaUrl(carouselImages[0])})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundAttachment: 'fixed'
+        }"
+      ></div>
+      
+      <!-- Normal Carousel Mode -->
+      <template v-else>
         <div 
-          v-for="(media, index) in carouselImages" 
-          :key="`carousel-${index}`"
-          class="carousel-slide"
-          :class="{ active: currentSlide === index }"
+          v-if="carouselImages.length > 1" 
+          class="carousel-container"
+          :style="{ '--carousel-speed': `${carouselSpeed}s`, '--transition-duration': `${transitionDuration}s` }"
         >
+          <div 
+            v-for="(media, index) in carouselImages" 
+            :key="`carousel-${index}`"
+            class="carousel-slide"
+            :class="{ active: currentSlide === index }"
+          >
+            <img 
+              v-if="!isVideo(media)"
+              :src="getMediaUrl(media)" 
+              :alt="media.alt || 'Carousel image'"
+              class="carousel-image"
+            />
+            <video 
+              v-else
+              :src="getMediaUrl(media)" 
+              :alt="media.alt || 'Carousel video'"
+              class="carousel-video"
+              muted
+              loop
+              autoplay
+              playsinline
+            />
+          </div>
+        </div>
+        <div v-else-if="carouselImages.length === 1" class="single-image">
           <img 
-            v-if="!isVideo(media)"
-            :src="getMediaUrl(media)" 
-            :alt="media.alt || 'Carousel image'"
+            v-if="!isVideo(carouselImages[0])"
+            :src="getMediaUrl(carouselImages[0])" 
+            :alt="carouselImages[0].alt || 'Carousel image'"
             class="carousel-image"
           />
           <video 
             v-else
-            :src="getMediaUrl(media)" 
-            :alt="media.alt || 'Carousel video'"
+            :src="getMediaUrl(carouselImages[0])" 
+            :alt="carouselImages[0].alt || 'Carousel video'"
             class="carousel-video"
             muted
             loop
@@ -42,25 +75,7 @@
             playsinline
           />
         </div>
-      </div>
-      <div v-else-if="carouselImages.length === 1" class="single-image">
-        <img 
-          v-if="!isVideo(carouselImages[0])"
-          :src="getMediaUrl(carouselImages[0])" 
-          :alt="carouselImages[0].alt || 'Carousel image'"
-          class="carousel-image"
-        />
-        <video 
-          v-else
-          :src="getMediaUrl(carouselImages[0])" 
-          :alt="carouselImages[0].alt || 'Carousel video'"
-          class="carousel-video"
-          muted
-          loop
-          autoplay
-          playsinline
-        />
-      </div>
+      </template>
       
       <!-- Overlay -->
       <div v-if="overlay" class="overlay-image">
@@ -121,6 +136,7 @@ const transitionDuration = computed(() => props.section?.singleCarouselContent?.
 const enableBookingButton = computed(() => props.section?.singleCarouselContent?.enableBookingButton || false)
 const enablePaddingTopBottom = computed(() => props.section?.singleCarouselContent?.enablePaddingTopBottom || false)
 const enablePaddingLeftRight = computed(() => props.section?.singleCarouselContent?.enablePaddingLeftRight || false)
+const enableFixedBackground = computed(() => props.section?.singleCarouselContent?.enableFixedBackground || false)
 const topBackgroundColor = computed(() => props.section?.singleCarouselContent?.topBackgroundColor)
 const bottomBackgroundColor = computed(() => props.section?.singleCarouselContent?.bottomBackgroundColor)
 
@@ -139,9 +155,9 @@ const isVideo = (media) => {
   return media?._type === 'file' || media?.asset?.url?.includes('.mp4')
 }
 
-// Start carousel if we have multiple images
+// Start carousel if we have multiple images and not in fixed background mode
 const startCarousel = () => {
-  if (carouselImages.value.length <= 1) return
+  if (carouselImages.value.length <= 1 || enableFixedBackground.value) return
   
   carouselInterval = setInterval(() => {
     currentSlide.value = (currentSlide.value + 1) % carouselImages.value.length
@@ -199,9 +215,23 @@ onUnmounted(() => {
 
 .single-carousel-container {
   position: relative;
-  aspect-ratio: 16/9.8;
+  aspect-ratio: 1/1;
   overflow: hidden;
   width: 100%;
+}
+
+@media (min-width: 800px) {
+  .single-carousel-container {
+    aspect-ratio: 16/9.8;
+  }
+}
+
+.fixed-background {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
 .carousel-container {
@@ -252,7 +282,7 @@ onUnmounted(() => {
   width: 100%;
   height: 100%;
   pointer-events: none;
-  z-index: 2;
+  z-index: 1;
 }
 
 .overlay-img {
@@ -289,17 +319,17 @@ onUnmounted(() => {
 }
 
 /* Mobile responsive - change to square aspect ratio */
-@media (max-width: 800px) {
+@media (max-width: 801px) {
   .single-carousel-container {
     aspect-ratio: 1/1;
   }
   
   .marquee-top {
-    top: 15%;
+    top: 5px;
   }
   
   .marquee-bottom {
-    bottom: 15%;
+    bottom: 5px;
   }
 }
 </style>

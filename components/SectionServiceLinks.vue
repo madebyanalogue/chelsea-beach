@@ -1,6 +1,6 @@
 <template>
   <section class="section-service-links">
-    <div :class="['service-links-container', {'py2': enablePaddingTopBottom, 'px2': enablePaddingLeftRight }]">
+    <div :class="['service-links-container', {'py1 py-sm-2': enablePaddingTopBottom, 'px1 px-sm-2': enablePaddingLeftRight }]">
       <div class="service-links-grid">
         <div 
           v-for="(item, index) in items" 
@@ -14,6 +14,7 @@
             :target="item.targetBlank ? '_blank' : '_self'"
             :rel="item.targetBlank ? 'noopener noreferrer' : ''"
             class="service-link"
+            :class="item.url ? 'service-link-item--url' : 'service-link-item--no-url'"
           >
             <div class="service-link-image">
               <img 
@@ -37,7 +38,7 @@
             </div>
             <div class="service-link-content flex flex-center gap-1 h4 p2">
               <h3 class="service-link-title">{{ item.title }}</h3>
-              <span class="service-link-text">{{ item.linkTitle }}</span>
+              <span v-if="item.url" class="service-link-text">{{ item.linkTitle }}</span>
             </div>
           </div>
         </div>
@@ -115,18 +116,25 @@ const getGridClass = (index) => {
   overflow: hidden;
 }
 
-.service-links-container.py2 .service-links-grid {
+
+.service-links-container.py1 .service-links-grid {
+  gap: var(--pad-1) 0px;
+}
+
+.service-links-container.px1 .service-links-grid {
+  gap: var(--pad-1) 0px;
+}
+
+@media (min-width: 800px) {  
+.service-link-item.ratio-2-1 {
+  aspect-ratio: 2/1;
+}
+.service-links-container.py1 .service-links-grid {
   gap: var(--pad-2) 0px;
 }
 
-.service-links-container.px2 .service-links-grid {
+.service-links-container.px1 .service-links-grid {
   gap: 0px var(--pad-2);
-}
-
-
-@media (min-width: 801px) {  
-.service-link-item.ratio-2-1 {
-  aspect-ratio: 2/1;
 }
 }
 
@@ -156,7 +164,7 @@ const getGridClass = (index) => {
   transition: transform 0.3s ease;
 }
 
-.service-link:hover .cover-image {
+.service-link.service-link-item--url:hover .cover-image {
   transform: scale(1.05);
 }
 

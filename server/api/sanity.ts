@@ -50,6 +50,9 @@ export default defineEventHandler(async (event) => {
               faviconPng {
                 asset->
               },
+              faviconDarkPng {
+                asset->
+              },
               appleTouchIcon {
                 asset->
               },
@@ -84,8 +87,16 @@ export default defineEventHandler(async (event) => {
                 ...,
                 asset->
               },
-              alt
+              alt,
+              repeatLeftRight
             },
+            // Logotype image for preloader
+            logotype {
+              ...,
+              asset->
+            },
+            // Feature flags / toggles
+            disablePreloader,
             // Contact info
             contactInfo[] {
               label,
@@ -359,13 +370,8 @@ export default defineEventHandler(async (event) => {
                     metadata { dimensions }
                   }
                 },
-                pdf {
-                  asset-> {
-                    _id,
-                    url,
-                    metadata { dimensions }
-                  }
-                }
+                offsiteUrl,
+                linkTitle
               },
               button {
                 text,
@@ -486,6 +492,7 @@ export default defineEventHandler(async (event) => {
               carouselSpeed,
               transitionDuration,
               enableBookingButton,
+              enableFixedBackground,
               enablePaddingTopBottom,
               enablePaddingLeftRight,
               topBackgroundColor,
@@ -702,13 +709,8 @@ export default defineEventHandler(async (event) => {
             metadata { dimensions }
           }
         },
-        pdf {
-          asset-> {
-            _id,
-            url,
-            metadata { dimensions }
-          }
-        }
+        offsiteUrl,
+        linkTitle
       }`)
       return result
     }

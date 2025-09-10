@@ -20,13 +20,13 @@ export default defineNuxtPlugin(async () => {
     window.Draggable = Draggable
     window.InertiaPlugin = InertiaPlugin
     
-    console.log('✅ [GSAP Plugin] Successfully loaded Draggable and InertiaPlugin from npm')
   } catch (error) {
     console.warn('🔴 [GSAP Plugin] Failed to load club plugins from npm:', error)
   }
 
-  // Make GSAP globally available for other plugins
+  // Make GSAP and ScrollTrigger globally available for other plugins
   window.gsap = gsap
+  window.ScrollTrigger = ScrollTrigger
 
   return {
     provide: {

@@ -36,7 +36,7 @@
             </a>
           </li>
         </ul>
-        <div class="menu-details">
+        <div class="menu-details" v-if="hasAnySocials">
           <p ref="socialsTitle" data-menu-fade class="p-small">Socials</p>
           <div class="socials-row">
             <a 
@@ -89,6 +89,12 @@ const { linkedinUrl, instagramUrl } = useSiteSettings()
 const { getProcessedUrl } = useUrlProcessing()
 
 const menuItems = computed(() => mainMenu?.value?.items || [])
+
+const hasAnySocials = computed(() => {
+  const hasLinkedIn = Boolean(linkedinUrl && String(linkedinUrl).trim().length > 0)
+  const hasInstagram = Boolean(instagramUrl && String(instagramUrl).trim().length > 0)
+  return hasLinkedIn || hasInstagram
+})
 
 const closeMenu = () => {
   emit('close-menu')
@@ -203,7 +209,7 @@ const closeNav = () => {
 .nav {
   z-index: 10000;
   width: 100%;
-  height: 100vh;
+  height: 100svh;
   margin-left: auto;
   margin-right: auto;
   display: none;
@@ -217,11 +223,11 @@ const closeNav = () => {
   flex-flow: column;
   justify-content: space-between;
   align-items: flex-start;
-  width: 26vw;
+  width: 400px;
   height: 100%;
   margin-left: auto;
   padding-top: calc(0.75vw + 90px);
-  padding-bottom: 80px;
+  padding-bottom: 60px;
   position: relative;
   overflow: auto;
 }
@@ -278,21 +284,25 @@ const closeNav = () => {
 }
 
 .menu-link {
-  grid-column-gap: 0.75em;
-  grid-row-gap: 0.75em;
+  grid-column-gap: 20px;
+  grid-row-gap: 20px;
   color: var(--dark-grey);
   width: 100%;
-  padding-top: 0.75em;
-  padding-bottom: 0.75em;
-  padding-left: 2em;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  padding-left: 40px;
   text-decoration: none;
   display: flex;
+  transition: color 0.3s ease;
+}
+.menu-link:hover {
+  color: var(--yellow);
 }
 
 .menu-link-heading {
   z-index: 1;
   text-transform: none;
-  font-size: var(--h2);
+  font-size: 40px;
   font-weight: 400;
   line-height: 0.75;
   transition: transform 0.55s cubic-bezier(0.65, 0.05, 0, 1);
@@ -359,19 +369,16 @@ const closeNav = () => {
 }
 
 /* Responsive */
-@media (max-width: 768px) {
+@media (max-width: 600px) {
   .menu {
     width: 100%;
-    padding-top: 4em;
-    padding-bottom: 2em;
+    padding-top: 80px;
+    padding-bottom: 40px;
   }
   
   .menu-link-heading {
-    font-size: 3em;
+    font-size: 30px;
   }
   
-  .menu-list-item {
-    height: 4em;
-  }
 }
 </style>

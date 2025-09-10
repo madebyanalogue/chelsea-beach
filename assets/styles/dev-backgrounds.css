@@ -2,15 +2,6 @@
 /* Remove this file when done building */
 
 
-.section-galleries {
-  background-image: url('/sections/section-galleries.jpg');
-  background-position: center top;
-  background-size: 100%;
-  background-repeat: no-repeat;
-  min-height: 100vw;
-}
-
-
 /* Responsive adjustments */
 @media (max-width: 768px) {
   header,

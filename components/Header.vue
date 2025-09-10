@@ -5,7 +5,7 @@
 
     <SectionMarquee />
   
-    <div class="header-bar flex flex-row flex-center flex-middle px2">
+    <div class="header-bar flex flex-row flex-center flex-middle px1 px-md-2">
       <div class="header-left">
         <div class="page-title-container">
           <div class="page-title mono" :data-page-title="pageTitle" ref="pageTitleRef">{{ displayTitle }}</div>
@@ -237,14 +237,13 @@ const closeMenu = () => {
   justify-content: space-between;
   display:grid;
   grid-template-areas:
-        "leftTop right"
-        "leftBottom right";
+        "left center right";
   gap: 10px;
   height: var(--header-height);
   grid-template-rows: auto;
   /* Initial state will be handled entirely by GSAP */
 }
-@media all and (min-width: 1024px) {
+@media all and (min-width: 800px) {
   .header-bar {
     grid-template-areas:
         "left center right";
@@ -271,10 +270,10 @@ const closeMenu = () => {
   display: flex;
   align-items: center;
   justify-content: center;
-  grid-area: leftTop;
+  grid-area: center;
   margin-left: calc(var(--pad-1) * -0.12);
 }
-@media all and (min-width: 1024px) {
+@media all and (min-width: 800px) {
   .logo-center {
     grid-area: center;
     margin-left: calc(var(--pad-1) * -0);
@@ -289,11 +288,13 @@ const closeMenu = () => {
 
 .header-left {
   justify-content: flex-start;
-  grid-area: leftBottom;
+  grid-area: left;
+  display: none;
 }
-@media all and (min-width: 1024px) {
+@media all and (min-width: 800px) {
   .header-left {
     grid-area: left;
+    display: flex;
   }
 }
 .header-right {

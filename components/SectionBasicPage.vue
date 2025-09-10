@@ -1,9 +1,9 @@
 <template>
   <section class="dark section-basic-page">
-    <div class="wrapper">
-      <div class="py3 grid grid-1 gap-3">
+    <div class="wrapper medium">
+      <div class="py2 py-sm-3 grid grid-1 gap-3">
 
-        <div class="grid" style="color: var(--yellow);">
+        <div class="grid show-md" style="color: var(--yellow);">
           <div class="col-span-2-md grid grid-2">
             <div></div>
             <div class="grid grid-1 ">
@@ -17,7 +17,7 @@
 
         <div class="grid py1 pbottom">
           <div></div>
-          <div class="col-span-7-md">
+          <div class="col-span-12 col-span-7-md">
             <h2>{{ section.basicContent.title }}</h2>
             <div v-if="section?.basicContent?.content" class="content-wrapper">
               <SanityBlocks :blocks="section.basicContent.content" />

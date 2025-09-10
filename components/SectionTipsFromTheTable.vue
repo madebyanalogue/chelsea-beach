@@ -1,5 +1,5 @@
 <template>
-  <section class="section-tips-from-the-table grid grid-1 gap-3 py3">
+  <section class="section-tips-from-the-table grid grid-1 gap-2 gap-3-sm py2 py-sm-3">
       <div v-if="title" class="wrapper">
         <div class="">
           <h2 class="h0 heading uppercase flex flex-between">
@@ -18,26 +18,30 @@
         <div
           v-for="tip in tips"
           :key="tip._id"
-          class="tip-item grid grid-1 grid-md-2 gap-2"
+          class="tip-item grid grid-1 grid-md-2 gap-1 gap-2-md"
         >
           <div class="tip-image-container flex flex-middle flex-end">
             <div v-if="tip.backgroundImage" class="tip-background-image">
-              <img
+              <NuxtImg
                 :src="getImageUrl(tip.backgroundImage)"
                 :alt="tip.title"
                 class="tip-background-cover"
+                loading="lazy"
+                data-image-overlay
               />
             </div>
             <div class="tip-image">
-              <img
+              <NuxtImg
                 :src="getImageUrl(tip.image)"
                 :alt="tip.title"
                 class="tip-cover-image"
+                loading="lazy"
+                data-image-overlay
               />
             </div>
           </div>
           <div class="tip-content flex flex-center flex-middle">
-            <div class="grid grid-1 underline-links reverse px4">
+            <div class="grid grid-1 underline-links reverse px-md-4">
               <div class="grid grid-4">
                 <div class="tip-title heading h3 col-span-3">{{ tip.title }}</div>
               </div>

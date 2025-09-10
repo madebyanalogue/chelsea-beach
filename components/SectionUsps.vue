@@ -3,9 +3,9 @@
     <div class="wrapper">
       <div class="grid grid-1 py7 px-md-5">
         <div>
-          <div class="grid grid-2 grid-md-4 gap-2 h4">
+          <div class="grid grid-2 grid-md-4 h4 usps-grid">
             <div v-for="(item, index) in items" :key="index" class="usp-item">
-              <div class="usp grid grid-1 gap-2">
+              <div class="usp grid grid-1 gap-1 gap-sm-2">
                 <div class="usp grid grid-2">
                   <div class="usp-image-container">
                     <img 
@@ -61,6 +61,14 @@ onMounted(() => {
 </script>
 
 <style scoped>
+.usps-grid {
+  gap: var(--pad-2) var(--pad-1);
+}
+@media (min-width: 800px) {
+  .usps-grid {
+    gap: var(--pad-2) var(--pad-2);
+  }
+}
 .usp-image-container {
   aspect-ratio: 1/1;
   position: relative;

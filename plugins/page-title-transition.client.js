@@ -57,9 +57,12 @@ export default defineNuxtPlugin(() => {
       // Start the animation
       isAnimating = true
       
+      // Disable any CSS transitions to prevent cross-fading
+      gsap.set(element, { transition: "none" })
+      
       // Step 1: Fade out current title (keep old text)
       gsap.to(element, {
-        duration: 0.4,
+        duration: 1,
         opacity: 0,
         ease: "power2.out",
         onComplete: () => {
@@ -71,11 +74,14 @@ export default defineNuxtPlugin(() => {
           
           // Step 3: Fade in new title
           gsap.to(element, {
-            duration: 0.5,
+            duration: 1.5,
             opacity: 1,
             ease: "power2.out",
             onComplete: () => {
-              isAnimating = false
+              // Step 4: Add delay after fade in completes
+              gsap.delayedCall(0.3, () => {
+                isAnimating = false
+              })
             }
           })
         }

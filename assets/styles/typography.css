@@ -39,6 +39,8 @@
   --color-bg: var(--dark-grey);
   --color-text: var(--white);
   --color-link: var(--yellow);
+  --section-bg: var(--dark-grey);
+  --section-text: var(--white);
 }
 
 .grey-bg {
@@ -157,33 +159,42 @@ letter-spacing: var(--letterspacing);
 }
 
 :root {
-  --unit: 2vw;
+  --unit: 10px;
   --unit-reference: 1600;
+  --min-body: 15px;
+  --min-h6: 12px;
   --h0: 4.7vw;
   --h1: calc((48 / (var(--unit-reference) / 100)) * var(--unit));
   --h2: calc((35 / (var(--unit-reference) / 100)) * var(--unit));
   --h3: calc((32 / (var(--unit-reference) / 100)) * var(--unit));
   --h4: clamp(14px, calc((25 / (var(--unit-reference) / 100)) * var(--unit)), 80px);
   --h5: clamp(14px, calc((21 / (var(--unit-reference) / 100)) * var(--unit)), 80px);
-  --h6: clamp(14px, calc((16 / (var(--unit-reference) / 100)) * var(--unit)), 80px);
+  --h6: clamp(var(--min-h6), calc((16 / (var(--unit-reference) / 100)) * var(--unit)), 80px);
   --h7: clamp(11px, calc((12 / (var(--unit-reference) / 100)) * var(--unit)), 80px);
-  --body: clamp(15px, calc((19 / (var(--unit-reference) / 100)) * var(--unit)), 80px);
+  --body: clamp(var(--min-body), calc((19 / (var(--unit-reference) / 100)) * var(--unit)), 80px);
 }
 
 h1, h2, h3, h4, h5, h6, h7 {
   font-weight: 400;
 }
 
-@media all and (min-width:768px) {
+@media all and (min-width:600px) {
   :root {
-      --unit: 20px;
       --unit: 2vw;
+    }
+}
+
+@media all and (min-width:800px) {
+  :root {
+      --unit: 15px;
     }
 }
 
 @media all and (min-width:1024px) {
     :root {
         --unit: 1vw;
+        --min-body: 12px;
+        --min-h6: 10px;
     }
 }
 

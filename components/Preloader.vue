@@ -1,39 +1,57 @@
 <template>
+  <!-- Colored background layers - siblings to preloader -->
+  <div v-if="!disablePreloader" class="preloader-bg">
+    <div ref="bgPanel1" class="bg-panel first"></div>
+    <div ref="bgPanel2" class="bg-panel second"></div>
+    <div ref="bgPanel3" class="bg-panel third"></div>
+  </div>
+  
   <div 
-    v-if="showPreloader" 
+    v-show="showPreloader" 
     class="preloader-container"
     data-loading-container
   >
-    <div class="preloader-content">
+    <div class="preloader-content" :class="{ 'has-images': preloaderImages.length > 0 }">
       <!-- Image sequence container -->
       <div 
         class="image-sequence"
         data-loading-words
       >
-        <div class="image-container">
-          <img 
-            v-if="currentImageSource && currentImageIndex < preloaderImages.length"
-            :src="getImageUrl(currentImageSource)"
-            :alt="(preloaderImages[currentImageIndex]?.alt) || 'Preloader image'"
-            class="preloader-image"
-          />
-        </div>
+          <div class="image-container">
+            <img 
+              v-if="currentImageSource && currentImageIndex < preloaderImages.length"
+              :src="getImageUrl(currentImageSource)"
+              :alt="(preloaderImages[currentImageIndex]?.alt) || 'Preloader image'"
+              class="preloader-image"
+            />
+            <img 
+              v-if="currentImageSource && currentImageIndex < preloaderImages.length && preloaderImages[currentImageIndex]?.repeatLeftRight"
+              :src="getImageUrl(currentImageSource)"
+              :alt="(preloaderImages[currentImageIndex]?.alt) || 'Preloader image'"
+              class="preloader-image"
+            />
+            <img 
+              v-if="currentImageSource && currentImageIndex < preloaderImages.length && preloaderImages[currentImageIndex]?.repeatLeftRight"
+              :src="getImageUrl(currentImageSource)"
+              :alt="(preloaderImages[currentImageIndex]?.alt) || 'Preloader image'"
+              class="preloader-image"
+            />
+          </div>
       </div>
 
       <div class="website-icon-container">
-        <svg id="a" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 159.07 43">
-          <g>
-            <path d="M0,29.51c0-6.11,4.09-11.4,9.87-13C9.92,7.45,17.3.09,26.38.09c6.14,0,11.8,3.49,14.62,8.85,1.44-.92,3.11-1.41,4.85-1.41,4.96,0,9,4.01,9.06,8.96,5.83,1.57,9.95,6.86,9.95,13.02,0,7.44-6.05,13.49-13.49,13.49H13.49c-7.44,0-13.49-6.05-13.49-13.49M41.45,12.14l-1.52,1.5-.77-1.99c-2.03-5.24-7.17-8.76-12.78-8.76-7.56,0-13.71,6.15-13.71,13.7,0,.3.01.62.03.93l.08,1.25-1.23.22c-5.08.93-8.76,5.35-8.76,10.52,0,5.89,4.79,10.69,10.69,10.69h37.88c5.9,0,10.69-4.79,10.69-10.69,0-5.22-3.73-9.65-8.86-10.53l-1.33-.23.18-1.33c.04-.28.05-.56.05-.82,0-3.45-2.81-6.26-6.26-6.26-1.66,0-3.22.64-4.4,1.81"/>
-          </g>
-          <g>
-            <path d="M90.23,0c-11.85,0-21.48,9.65-21.48,21.49s9.63,21.48,21.48,21.48h0c11.84-.01,21.48-9.65,21.48-21.49S102.08,0,90.23,0ZM90.23,40.17c-10.3,0-18.68-8.39-18.68-18.69S79.93,2.8,90.23,2.8s18.69,8.37,18.69,18.68-8.39,18.69-18.69,18.69Z"/>
-            <path d="M93.73,21.14c1.48-.56,2.59-1.96,2.59-3.68,0-2.9-2.38-4.62-5.99-4.62h-5.96v17.21h6.53c3.87,0,6.32-1.79,6.32-4.88,0-1.98-1.51-3.75-3.49-4.03ZM88.14,16.02h1.84c1.68,0,2.64.45,2.64,1.89s-.9,2.1-2.64,2.1h-1.84v-3.99ZM90.9,26.87h-2.76v-3.68h2.76c1.56,0,2.43.57,2.43,1.77s-.66,1.91-2.43,1.91Z"/>
-          </g>
-          <g>
-            <path d="M116.07,0v43h43V0h-43ZM156.18,40.09h-37.22V2.87h37.22v37.22Z"/>
-            <path d="M134.78,25.71h5.24l1.32,4.34h4.15l-6.25-17.21h-3.63l-6.16,17.21h3.99l1.34-4.34ZM137.06,18.33h.01c.19-.63.35-1.39.35-1.39,0,0,.19.78.38,1.39l1.27,4.2h-3.3l1.29-4.2Z"/>
-          </g>
-        </svg>
+        <!-- Show SVG content if it's an SVG, otherwise show as image -->
+        <div 
+          v-if="logotypeSvgContent"
+          v-html="logotypeSvgContent"
+          class="logotype-svg"
+        />
+        <img 
+          v-else-if="logotypeImageUrl"
+          :src="logotypeImageUrl"
+          :alt="websiteTitle"
+          class="logotype-image"
+        />
       </div>
       
       <!-- Website title container -->
@@ -72,16 +90,50 @@ const props = defineProps({
 const emit = defineEmits(['preloader-complete', 'preloader-ready'])
 
 const { getImageUrl } = useSanityImage()
-const { settings: siteSettings } = useSiteSettings()
+const { settings: siteSettings, disablePreloader } = useSiteSettings()
 
-// Preloader state - always show initially
+// Preloader state - respect disablePreloader flag
 const showPreloader = ref(true)
 const currentImageIndex = ref(0)
 const animationInitialized = ref(false)
 
+// Refs for background panels
+const bgPanel1 = ref(null)
+const bgPanel2 = ref(null)
+const bgPanel3 = ref(null)
+
 // Computed properties
 const preloaderImages = computed(() => siteSettings.value?.preloaderImages || [])
 const websiteTitle = computed(() => siteSettings.value?.title || 'Chelsea Beach')
+const logotypeImageUrl = computed(() => {
+  const logotype = siteSettings.value?.logotype
+  if (!logotype?.asset?.url) return null
+  return getImageUrl(logotype)
+})
+
+const logotypeSvgContent = ref(null)
+
+// Check if logotype is SVG and fetch its content
+const fetchLogotypeSvg = async () => {
+  const logotype = siteSettings.value?.logotype
+  if (!logotype?.asset?.url) return
+  
+  const url = getImageUrl(logotype)
+  const isSvg = url.toLowerCase().includes('.svg') || logotype.asset.extension === 'svg'
+  
+  if (isSvg) {
+    try {
+      const response = await fetch(url)
+      const svgText = await response.text()
+      logotypeSvgContent.value = svgText
+    } catch (error) {
+      console.warn('Failed to fetch SVG content:', error)
+      logotypeSvgContent.value = null
+    }
+  } else {
+    logotypeSvgContent.value = null
+  }
+}
 // Support two data shapes: [{ image, alt }] or directly [image]
 const currentImageSource = computed(() => {
   const item = preloaderImages.value?.[currentImageIndex.value]
@@ -121,56 +173,94 @@ const initPreloaderAnimation = () => {
   })
   
   if (preloaderImages.value.length > 0) {
-    // Ensure container starts visible (no fades between images)
-    animationTimeline.set('.image-sequence', { opacity: 1 })
-
-    // Instantly switch images on each interval with no fade
-    preloaderImages.value.forEach((_, index) => {
-      const start = index * (props.imageDuration / 1000)
-      animationTimeline.call(() => { currentImageIndex.value = index }, null, start)
+    // New logic: Single randomized preloader image + logotype overlay
+    // Select random image
+    const randomIndex = Math.floor(Math.random() * preloaderImages.value.length)
+    currentImageIndex.value = randomIndex
+    
+    // Stage 1: Random preloader image fades in
+    animationTimeline.set('.image-sequence', { opacity: 0 })
+    animationTimeline.to('.image-sequence', { 
+      opacity: 1, 
+      duration: 1.0, 
+      ease: "power2.out" 
     })
+    
+    // Stage 2: Logotype fades in overlaid (after image)
+    const logotypeStart = 1.0 // Start after image fade in
+    animationTimeline.set('.website-icon-container', { opacity: 0, visibility: 'visible' }, logotypeStart)
+    animationTimeline.to('.website-icon-container', { 
+      opacity: 1, 
+      duration: 1.0, 
+      ease: "power2.out" 
+    }, logotypeStart)
+    
+    // Stage 3: Transform up and out (after logotype)
+    const holdTime = logotypeStart + 1.0 // Hold for 1 second after logotype appears
+    const exitTime = holdTime + 0.8 // Exit animation duration
+    
+    // Animate preloader container up and out
+    animationTimeline.to('.preloader-container', {
+      y: '-100%',
+      duration: exitTime,
+      ease: "power2.inOut",
+      onComplete: () => {
+        // Hide preloader but keep in DOM
+        showPreloader.value = false
+        // Emit preloader complete event for section triggers
+        document.dispatchEvent(new CustomEvent('preloader-complete'))
+        // Add class to body so plugins can detect completion
+        document.body.classList.add('preloader-complete')
+      }
+    }, holdTime)
+    
+    // Animate background panels with slight delay
+    animationTimeline.to([bgPanel1.value, bgPanel2.value, bgPanel3.value], {
+      y: '-100%',
+      duration: exitTime,
+      ease: "power2.inOut",
+      stagger: 0.05 // Very slight stagger between panels
+    }, holdTime + 0.1) // Start 0.1s after preloader starts
+  } else {
+    // No preloader images - just show logotype
+    // Hide image sequence immediately
+    animationTimeline.set('.image-sequence', { opacity: 0 })
+    
+    // Show logotype with fade in
+    animationTimeline.set('.website-icon-container', { opacity: 0, visibility: 'visible' })
+    animationTimeline.to('.website-icon-container', { 
+      opacity: 1, 
+      duration: 1.0, 
+      ease: "power2.out" 
+    })
+    
+    // Hold for a moment then translate up and out
+    const holdTime = 1.0 // Hold for 1 second after fade in
+    const exitTime = holdTime + 0.8 // Exit animation duration
+    
+     // Animate preloader container up and out
+     animationTimeline.to('.preloader-container', {
+       y: '-100%',
+       duration: exitTime,
+       ease: "power2.inOut",
+       onComplete: () => {
+         // Hide preloader but keep in DOM
+         showPreloader.value = false
+         // Emit preloader complete event for section triggers
+         document.dispatchEvent(new CustomEvent('preloader-complete'))
+         // Add class to body so plugins can detect completion
+         document.body.classList.add('preloader-complete')
+       }
+     }, holdTime)
+    
+    // Animate background panels with slight delay
+    animationTimeline.to([bgPanel1.value, bgPanel2.value, bgPanel3.value], {
+      y: '-100%',
+      duration: exitTime,
+      ease: "power2.inOut",
+      stagger: 0.05 // Very slight stagger between panels
+    }, holdTime + 0.1) // Start 0.1s after preloader starts
   }
-  
-  // Calculate timing for SVG stages
-  const imageSequenceEnd = preloaderImages.value.length * (props.imageDuration / 1000)
-  const svgStage1 = imageSequenceEnd + 0.2
-  const svgStage2 = svgStage1 + 0.3
-  const svgStage3 = svgStage2 + 0.3
-  
-  // Hide image sequence and show SVG container
-  animationTimeline.set('.image-sequence', { opacity: 0 }, imageSequenceEnd)
-  animationTimeline.set('.website-icon-container', { opacity: 1, visibility: 'visible' }, imageSequenceEnd)
-  
-  // SVG reveal stages
-  // Stage 1: Show first group (transparent to visible)
-  animationTimeline.set('.website-icon-container g:nth-child(1)', { opacity: 0 }, imageSequenceEnd)
-  animationTimeline.to('.website-icon-container g:nth-child(1)', { opacity: 1, duration: 0, ease: 'power2.out' }, svgStage1)
-  
-  // Stage 2: Show second group
-  animationTimeline.set('.website-icon-container g:nth-child(2)', { opacity: 0 }, imageSequenceEnd)
-  animationTimeline.to('.website-icon-container g:nth-child(2)', { opacity: 1, duration: 0, ease: 'power2.out' }, svgStage2)
-  
-  // Stage 3: Show third group
-  animationTimeline.set('.website-icon-container g:nth-child(3)', { opacity: 0 }, imageSequenceEnd)
-  animationTimeline.to('.website-icon-container g:nth-child(3)', { opacity: 1, duration: 0, ease: 'power2.out' }, svgStage3)
-  
-  // Fade out SVG and entire preloader after SVG reveal
-  const svgHoldTime = svgStage3 + 0 // SVG holds for 0 seconds after animation completes
-  const preloaderEndTime = svgHoldTime + 0 // Then SVG fades out
-  // Hide SVG container
-  animationTimeline.set('.website-icon-container', { opacity: 0 }, preloaderEndTime)
-  // Then fade out entire preloader
-  animationTimeline.to('.preloader-container', {
-    autoAlpha: 0,
-    duration: 0,
-    ease: "Power1.easeInOut",
-    onComplete: () => {
-      // Emit preloader complete event for section triggers
-      document.dispatchEvent(new CustomEvent('preloader-complete'))
-      // Add class to body so plugins can detect completion
-      document.body.classList.add('preloader-complete')
-    }
-  }, preloaderEndTime + 0) // Instant completion
 }
 
 // Hide preloader manually
@@ -186,8 +276,19 @@ const hidePreloader = () => {
 }
 
 // Watch for site settings to be loaded
-watch(siteSettings, (newSettings) => {
+watch(siteSettings, async (newSettings) => {
+  if (disablePreloader.value) {
+    // Immediately hide and mark complete, skip animations
+    showPreloader.value = false
+    document.body.classList.add('preloader-complete')
+    emit('preloader-ready')
+    emit('preloader-complete')
+    return
+  }
   if (newSettings && !animationInitialized.value) {
+    // Fetch SVG content if logotype is SVG
+    await fetchLogotypeSvg()
+    
     // Preloader is ready
     // eslint-disable-next-line no-console
     console.log('[Preloader] Ready - starting animation')
@@ -218,15 +319,64 @@ onUnmounted(() => {
   left: 0;
   width: 100%;
   height: 100svh;
-  background: rgba(255, 255, 255, 1); /* Temporary 0.5 opacity for debugging */
+  background: transparent; /* Remove white background so layers show through */
   z-index: 99999;
   display: flex;
   align-items: center;
   justify-content: center;
+  color:var(--color-text);
+}
+
+.preloader-bg {
+  z-index: 99998; /* Just below preloader */
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100svh;
+  pointer-events: none; /* Don't interfere with interactions */
+}
+
+.bg-panel {
+  z-index: 1;
+  background-color: var(--white);
+  position: absolute;
+  inset: 0%;
+  height: 100%;
+  width: 100%;
+}
+
+.bg-panel.first {
+  background-color: var(--yellow); /* Red for debugging */
+  z-index: 3;
+  opacity: 1;
+}
+
+.bg-panel.second {
+  background-color: var(--dark-grey); /* Green for debugging */
+  z-index: 2;
+  opacity: 0;
+}
+
+.bg-panel.third {
+  background-color: var(--light-grey); /* Blue for debugging */
+  z-index: 1;
+  opacity: 0;
 }
 
 .preloader-content {
+  z-index: 10;
   text-align: center;
+  position: relative;
+  width:100%;
+}
+.has-images.preloader-content,
+.has-images.preloader-content .image-sequence {
+  height:100%;
+  width:100%;
+  position: absolute;
+  top:0;
+  left:0;
 }
 
 .image-sequence,
@@ -234,6 +384,10 @@ onUnmounted(() => {
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.has-images .image-sequence {
+  opacity: 0; /* Start hidden when there are preloader images */
 }
 
 .title-sequence {
@@ -247,13 +401,16 @@ onUnmounted(() => {
 }
 
 .image-container {
-  width: 10vw;
-  height: 10vw;
-  min-width: 120px;
-  min-height: 120px;
+  width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
+  position: absolute;
+  max-width: 133vh;
+  margin: 0 auto;
+  left: 50%;
+  transform: translateX(-50%);
 }
 
 .website-icon-container {
@@ -267,10 +424,25 @@ onUnmounted(() => {
   height: auto;
 }
 
-.website-icon-container svg {
-  width: auto;
-  height: 10vw;
-  min-height: 120px;
+.has-images .website-icon-container {
+ top:84%;
+}
+
+.logotype-image,
+.logotype-svg {
+  width:clamp(20vh, 30vw, 30vw);
+  display: block;
+}
+.has-images .logotype-image,
+.has-images .logotype-svg {
+  width: 25vw;
+  max-width: 20vh;
+}
+
+svg > * {
+  fill:currentColor;
+  width: 100%;
+  height: 100%;
 }
 
 .preloader-image {
@@ -278,6 +450,14 @@ onUnmounted(() => {
   height: 100%;
   object-fit: cover;
   border-radius: 0px;
+  max-width: unset;
+}
+
+.preloader-image.repeat-right {
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: scaleX(-1); /* Flip horizontally for left-right repeat */
 }
 
 .title-container {
@@ -286,13 +466,6 @@ onUnmounted(() => {
   justify-content: center;
 }
 
-.website-title {
-  font-size: clamp(2rem, 8vw, 4rem);
-  font-weight: 400;
-  color: var(--color-text, #000000);
-  margin: 0;
-  text-align: center;
-}
 
 /* Hide preloader in design mode */
 :is(.wf-design-mode, .w-editor) .preloader-container {

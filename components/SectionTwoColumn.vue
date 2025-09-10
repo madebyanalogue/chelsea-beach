@@ -28,11 +28,11 @@
           </div>
         </div>
 
-        <div class="col-span-12 col-span-6-md text--column gap-3" :class="{ 'has-text-image': textImage, 'p2 p3-md' : !enableBookingButton}">
+        <div class="col-span-12 col-span-6-md text--column gap-3" :class="{ 'has-text-image': textImage, 'pw p3-sm' : !enableBookingButton}">
           <div class="booking--buttons" v-if="enableBookingButton">
             <SectionMarquee />
-            <SectionMarquee :reverse="true" />
-            <SectionMarquee />
+            <SectionMarquee :reverse="true" class="show-md" />
+            <SectionMarquee class="show-md" />
           </div>
           <div class="text-image-container" v-if="textImage && !enableBookingButton">
             <NuxtImg 

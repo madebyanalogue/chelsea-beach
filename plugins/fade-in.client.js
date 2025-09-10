@@ -32,7 +32,7 @@ export default defineNuxtPlugin(() => {
       // Staggered reveal using global CSS var fallback
       const computed = getComputedStyle(document.documentElement)
       const globalStagger = parseInt(computed.getPropertyValue('--fade-stagger')) || 120
-      const globalInitialDelay = parseInt(computed.getPropertyValue('--fade-initial-delay')) || 200
+      const globalInitialDelay = parseInt(computed.getPropertyValue('--fade-initial-delay')) || 50
       const delayMs = Number(el.getAttribute('data-fade-in-delay')) || (globalInitialDelay + (index * globalStagger))
       
       // Add visible class after delay (CSS handles the transition)

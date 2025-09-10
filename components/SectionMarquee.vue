@@ -1,5 +1,5 @@
 <template>
-  <section class="marquee-section" v-if="effectiveLink">
+  <div class="marquee-section" v-if="effectiveLink">
     <div class="marquee-container">
       <div 
         class="marquee-content" 
@@ -17,7 +17,7 @@
         </div>
       </div>
     </div>
-  </section>
+  </div>
 </template>
 
 <script setup>
@@ -108,7 +108,7 @@ const effectiveLink = computed(() => overrideLink.value || bookingLink.value)
 
 
 /* Responsive adjustments */
-@media (max-width: 768px) {
+@media (max-width: 799px) {
   .marquee-item {
     width: calc(var(--unit) * 30);
   }

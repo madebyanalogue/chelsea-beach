@@ -1,12 +1,11 @@
 <template>
-  <section class="section-text py4">
+  <section class="section-text py2 py-sm-4">
     <div class="wrapper">
       <div class="grid grid-center-items">
         
         <!-- Text content -->
         <div 
           class="h4 text-center col-span-12 col-span-6-md grid grid-1"
-          data-fade-in
         >
           <div v-if="imageUrl || title" class="">
             <img 
@@ -17,7 +16,7 @@
             />
           </div>
           <div v-if="title" class="heading h2">{{ title }}</div>
-          <SanityBlocks :blocks="content" class="px-sm-1 py1 pbottom"/>
+          <SanityBlocks :blocks="content" class="px-sm-1 py-sm-1 pbottom"/>
         </div>
       </div>
     </div>

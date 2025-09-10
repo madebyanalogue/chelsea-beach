@@ -358,7 +358,7 @@ onUnmounted(() => {
 }
 
 /* Responsive */
-@media (max-width: 768px) {
+@media (max-width: 799px) {
   .menu-overlay-content {
     flex-direction: column;
   }

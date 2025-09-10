@@ -1,29 +1,29 @@
 import { defineNuxtPlugin } from '#app'
 
 function initScalingHamburgerNavigation() {
-  console.log('Initializing hamburger navigation...')
+  //console.log('Initializing hamburger navigation...')
   
   // Toggle Navigation
   const toggleBtns = document.querySelectorAll('[data-navigation-toggle="toggle"]')
-  console.log('Found toggle buttons:', toggleBtns.length)
+  //console.log('Found toggle buttons:', toggleBtns.length)
   
   toggleBtns.forEach(toggleBtn => {
     toggleBtn.addEventListener('click', () => {
-      console.log('Toggle button clicked!')
+      //console.log('Toggle button clicked!')
       const navStatusEl = document.querySelector('[data-navigation-status]');
       if (!navStatusEl) {
-        console.log('No navigation status element found')
+        //console.log('No navigation status element found')
         return
       }
       const currentStatus = navStatusEl.getAttribute('data-navigation-status')
-      console.log('Current status:', currentStatus)
+      //console.log('Current status:', currentStatus)
       
       if (currentStatus === 'not-active') {
         navStatusEl.setAttribute('data-navigation-status', 'active');
-        console.log('Set to active')
+        //console.log('Set to active')
       } else {
         navStatusEl.setAttribute('data-navigation-status', 'not-active');
-        console.log('Set to not-active')
+        //console.log('Set to not-active')
       }
     });
   });
@@ -53,7 +53,7 @@ function initScalingHamburgerNavigation() {
 
 // Initialize Scaling Hamburger Navigation
 export default defineNuxtPlugin(() => {
-  console.log('Navigation plugin loading...')
+  //console.log('Navigation plugin loading...')
   if (process.server) return
   
   let retryCount = 0
@@ -62,17 +62,17 @@ export default defineNuxtPlugin(() => {
   // Wait for DOM to be fully ready and then retry until navigation is found
   const initNavigationWithRetry = () => {
     if (retryCount >= maxRetries) {
-      console.log('Max retries reached for navigation, giving up')
+      //console.log('Max retries reached for navigation, giving up')
       return
     }
     
     const toggleBtns = document.querySelectorAll('[data-navigation-toggle="toggle"]')
     if (toggleBtns.length > 0) {
-      console.log('Navigation found, initializing...')
+      //console.log('Navigation found, initializing...')
       initScalingHamburgerNavigation()
     } else {
       retryCount++
-      console.log(`Navigation not found yet, retry ${retryCount}/${maxRetries} in 100ms...`)
+      //console.log(`Navigation not found yet, retry ${retryCount}/${maxRetries} in 100ms...`)
       setTimeout(initNavigationWithRetry, 100)
     }
   }

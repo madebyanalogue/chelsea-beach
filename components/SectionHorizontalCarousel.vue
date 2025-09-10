@@ -109,16 +109,10 @@ const title = computed(() => props.section?.title || '')
 const items = computed(() => {
   const carouselItems = props.section?.horizontalCarouselContent?.items || []
   
-  // Debug logging
-  console.log('=== HORIZONTAL CAROUSEL DEBUG ===')
-  console.log('Section:', props.section)
-  console.log('Horizontal carousel content:', props.section?.horizontalCarouselContent)
-  console.log('Items:', carouselItems)
-  console.log('Items length:', carouselItems.length)
   
   if (carouselItems.length > 0) {
-    console.log('First item:', carouselItems[0])
-    console.log('First item asset:', carouselItems[0]?.asset)
+  //   console.log('First item:', carouselItems[0])
+  //   console.log('First item asset:', carouselItems[0]?.asset)
   }
   
   return carouselItems
@@ -492,68 +486,4 @@ onMounted(() => {
 
 /* Controls */
 
-.gsap-slider__controls {
-  justify-content: between;
-  align-items: center;
-  display: flex;
-  justify-content: space-between;
-  top:50%;
-  transform: translateY(-50%);
-  width: 100%;
-  padding: 0 var(--pad-2);
-  position: absolute;
-  pointer-events: none;
-}
-
-.gsap-slider__control {
-  color: var(--yellow);
-  background-color: transparent;
-  border: 1px solid var(--yellow);
-  border-radius: 50%;
-  width: var(--pad-3);
-  height: var(--pad-3);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  pointer-events: auto;
-}
-
-*[data-gsap-slider-control="next"] {
-  transform: rotate(90deg);
-}
-
-*[data-gsap-slider-control="prev"] {
-  transform: rotate(-90deg);
-}
-
-[data-gsap-slider-status="not-active"] [data-gsap-slider-controls] {
-  display: none;
-}
-
-[data-gsap-slider-control-status="not-active"] { 
-  opacity: 0;
-  pointer-events: none;
-}
-
-/* Customization */
-
-.gsap-slider__control {
-  transition: opacity 0.3s ease;
-}
-
-.demo-card {
-  transition: all 0.3s ease;
-}
-
-[data-gsap-slider-item-status="not-active"] .demo-card {
-  background-color: #131313;
-}
-
-.demo-card__tag {
-  transition: all 0.3s ease;
-}
-
-[data-gsap-slider-item-status="not-active"] .demo-card__tag {
-  opacity: 0;
-}
 </style>

@@ -2,8 +2,8 @@ export default defineNuxtPlugin(() => {
   // Available overlay colors
   const overlayColors = [
     '#5b5653', // dark grey
-    '#dfd3cd', // beige
-    '#ffffff', // white
+    //'#dfd3cd', // beige
+    //'#f7efeb', // light grey
     '#ffdd15'  // yellow
   ]
   
@@ -142,6 +142,13 @@ export default defineNuxtPlugin(() => {
           once: true // Only trigger once
         }
       })
+
+      // Also trigger immediately if already in view on load
+      const rect = image.getBoundingClientRect()
+      const isVisible = rect.top < window.innerHeight * 0.8 && rect.bottom > 0
+      if (isVisible) {
+        triggerImageOverlay(image)
+      }
     })
   }
   
@@ -213,6 +220,12 @@ export default defineNuxtPlugin(() => {
     setTimeout(setupScrollTriggers, 100)
   })
   
+  // Re-initialize on route changes (global)
+  document.addEventListener('route-changed', () => {
+    initImageOverlays()
+    setTimeout(setupScrollTriggers, 100)
+  })
+  
   // Also watch for new images being added
   const observer = new MutationObserver((mutations) => {
     mutations.forEach((mutation) => {
@@ -224,8 +237,9 @@ export default defineNuxtPlugin(() => {
           )
         )
         if (hasNewImages) {
-          console.log('[ImageOverlay] New images detected, re-initializing...')
+          //console.log('[ImageOverlay] New images detected, re-initializing...')
           initImageOverlays()
+          setTimeout(setupScrollTriggers, 50)
         }
       }
     })

@@ -20,16 +20,15 @@
               <div class="grid grid-1 gap-1">
                 <div class="h2">{{ newsItem.title }}</div>
                 <SanityBlocks v-if="newsItem.content" :blocks="newsItem.content" />
-                <div v-if="newsItem.pdf?.asset?.url" >
+                <div v-if="newsItem.offsiteUrl">
                   <a 
-                      v-if="newsItem.pdf?.asset?.url" 
-                      :href="newsItem.pdf.asset.url" 
+                      :href="newsItem.offsiteUrl" 
                       target="_blank" 
                       rel="noopener noreferrer"
                       class="btn" 
                       data-btn-hover
                     >
-                      <span class="btn__text">Download PDF</span>
+                      <span class="btn__text">{{ newsItem.linkTitle || 'Discover more' }}</span>
                       <div class="btn__circle"></div>
                   </a>
                 </div>

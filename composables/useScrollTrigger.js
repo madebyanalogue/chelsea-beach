@@ -12,7 +12,7 @@ export const useScrollTrigger = () => {
     if (typeof window === 'undefined') return
     
     scrollAnimationsEnabled = true
-    console.log('[ScrollTrigger] Animations enabled')
+    //console.log('[ScrollTrigger] Animations enabled')
     
     // Resume all paused timelines
     registeredAnimations.forEach((animation, sectionId) => {
@@ -38,7 +38,7 @@ export const useScrollTrigger = () => {
     
     // Ensure GSAP and ScrollTrigger are available
     if (typeof window.gsap === 'undefined') {
-      console.warn('GSAP not loaded yet')
+      //console.warn('GSAP not loaded yet')
       return null
     }
     

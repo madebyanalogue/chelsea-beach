@@ -1,7 +1,7 @@
 <template>
-  <section class="section-instagram py3">
+  <section class="section-instagram py2 py-sm-3">
     <div class="wrapper">
-      <div class="grid grid-1 gap--2">
+      <div class="grid grid-1 gap-1 gap-sm-2">
       <!-- Section Image -->
         <div v-if="sectionImage" class="grid grid-center-items">
           <div class="col-span-12 col-span-6-md">
@@ -13,8 +13,23 @@
           </div>
         </div>
 
+        <!-- Fading Carousel (like SingleCarousel) -->
+        <div v-if="items?.length" class="instagram-carousel px1 px-sm-4 hide-md">
+          <div class="carousel-stage">
+            <img
+              v-for="(item, index) in items"
+              :key="index"
+              :src="getImageUrl(item.image)"
+              :alt="`Instagram carousel ${index + 1}`"
+              class="carousel-image"
+              :class="{ 'is-active': index === currentSlide }"
+              draggable="false"
+            />
+          </div>
+        </div>
+
         <!-- Instagram Grid -->
-        <div class="grid grid-3 gap-2 px6">
+        <div class="grid grid-3 gap-2 px2 px-md-6 show-md">
           <div
             v-for="(item, index) in shuffledItems"
             :key="index"
@@ -60,7 +75,7 @@
 </template>
 
 <script setup>
-import { computed, ref, onMounted } from 'vue'
+import { computed, ref, onMounted, onUnmounted } from 'vue'
 import { useSanityImage } from '~/composables/useSanityImage'
 
 const props = defineProps({
@@ -99,6 +114,34 @@ const shuffleArray = (array) => {
 onMounted(() => {
   // Shuffle items on component mount
   shuffledItems.value = shuffleArray(items.value)
+})
+
+// --- Fading carousel state/logic ---
+const currentSlide = ref(0)
+const carouselTimer = ref(null)
+const carouselIntervalMs = 3000
+
+function startCarousel() {
+  stopCarousel()
+  if (!items.value?.length) return
+  carouselTimer.value = setInterval(() => {
+    currentSlide.value = (currentSlide.value + 1) % items.value.length
+  }, carouselIntervalMs)
+}
+
+function stopCarousel() {
+  if (carouselTimer.value) {
+    clearInterval(carouselTimer.value)
+    carouselTimer.value = null
+  }
+}
+
+onMounted(() => {
+  startCarousel()
+})
+
+onUnmounted(() => {
+  stopCarousel()
 })
 </script>
 
@@ -149,6 +192,37 @@ onMounted(() => {
 .instagram-link {
   text-decoration: none;
   color: inherit;
+}
+
+/* --- Fading carousel styles --- */
+
+.carousel-stage {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.carousel-stage::before {
+  content: '';
+  display: block;
+  /* Maintain 2:3 portrait ratio */
+  padding-top: calc(100% * 3 / 2);
+}
+
+.carousel-stage > img.carousel-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0;
+  transition: opacity 600ms ease;
+}
+
+.carousel-stage > img.carousel-image.is-active {
+  opacity: 1;
 }
 
 /* Desktop: 3 columns */

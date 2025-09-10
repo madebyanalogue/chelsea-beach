@@ -17,10 +17,9 @@
       <ClientOnly>
         <template #default>
           <Footer 
-            v-if="!page?.value?.hideFooter && !isPageTransitioning" 
+            v-if="!page?.value?.hideFooter" 
             :page-data="page" 
             :key="route.path"
-            :style="{ opacity: isPageTransitioning ? 0 : 1, transition: 'opacity 0.2s ease' }"
           />
         </template>
         <template #fallback>
@@ -42,11 +41,13 @@ import { useScrollTrigger } from '~/composables/useScrollTrigger.js';
 import { computed, onMounted, watch, ref } from 'vue';
 import { useRoute } from 'vue-router'
 import { useHead, useRouter } from '#app'
+import { useSiteSettings } from '~/composables/useSiteSettings'
 
 // Initialize page settings first
 const { isDark, page } = usePageSettings();
 const route = useRoute();
 const router = useRouter();
+const { disablePreloader } = useSiteSettings()
 
 // Initialize scroll trigger system
 const { enableScrollAnimations } = useScrollTrigger();
@@ -97,7 +98,7 @@ useHead({
           // Default to light mode - let Sanity CMS control dark mode per page
           document.documentElement.style.backgroundColor = 'var(--white)';
           
-          console.log('🔴 [App] CDN scripts loaded - plugins should auto-register');
+          //console.log('🔴 [App] CDN scripts loaded - plugins should auto-register');
         })();
       `,
       type: 'text/javascript'
@@ -128,7 +129,7 @@ const onPreloaderReady = () => {
   // Enable scrolling on body
   if (typeof document !== 'undefined') {
     document.body.classList.add('preloader-ready')
-    console.log('Added preloader-ready class to body')
+    //console.log('Added preloader-ready class to body')
   }
 }
 

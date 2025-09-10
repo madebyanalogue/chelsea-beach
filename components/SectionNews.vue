@@ -11,7 +11,7 @@
         </div>
 
         
-        <div class="grid grid-1 grid-md-2 gap-4 gap-2-md py2 pbottom">
+        <div class="grid grid-1 grid-md-2 gap-4 gap-2-md py2 pbottom underline-links reverse">
           <div v-for="(post, index) in posts" :key="post._id" class="news-item" :data-summary="post.summary">
             <div class="grid grid-1">
               <NuxtImg 
@@ -31,17 +31,13 @@
                   </div>
                 </div>
                 <div v-if="post.excerpt" :blocks="post.excerpt" class="h5" v-html="post.excerpt"></div>
-                <div v-if="post.pdf?.asset?.url" >
+                <div v-if="post.offsiteUrl">
                   <a 
-                      v-if="post.pdf?.asset?.url" 
-                      :href="post.pdf.asset.url" 
+                      :href="post.offsiteUrl" 
                       target="_blank" 
                       rel="noopener noreferrer"
-                      class="btn" 
-                      data-btn-hover
                     >
-                      <span class="btn__text">Download PDF</span>
-                      <div class="btn__circle"></div>
+                      {{ post.linkTitle || 'Discover more' }}
                   </a>
                 </div>
                 <!-- <div class="">

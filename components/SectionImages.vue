@@ -1,7 +1,7 @@
 <template>
   <section class="section-images">
     <div :class="[{'py-md-3': enablePadding }]">
-      <div class="images-grid p2">
+      <div class="images-grid p1 p2-sm">
         <div 
           v-for="(item, index) in items" 
           :key="index"
@@ -12,19 +12,24 @@
             class="image-container"
             :style="{
               justifyContent: getJustifyContent(item.alignment),
-              alignItems: getAlignItems(item.alignment)
+              alignItems: 'center'
             }"
           >
-            <img 
-              :src="getImageUrl(item.image)" 
-              :alt="item.title || 'Image'"
+          <div 
               :style="{
                 objectFit: item.objectFit || 'cover',
                 objectPosition: getObjectPosition(item.alignment),
                 width: `${item.width}%`
-              }"
-              class="image"
-            />
+              }"> 
+              <NuxtImg 
+                :src="getImageUrl(item.image)" 
+                :alt="item.title || 'Image'"
+                class="image"
+                data-image-overlay
+                loading="lazy"
+                format="webp"
+              />
+            </div>
           </div>
         </div>
       </div>
@@ -68,7 +73,7 @@ const getGridClass = (index) => {
   }
   
   if (totalItems === 2) {
-    return 'col-span-12 col-span-6-md' // 1:1 ratio each
+    return 'col-span-12 col-span-6-sm' // 1:1 ratio each
   }
   
   // For 3+ items, last item gets 2:1 if odd number
@@ -76,7 +81,7 @@ const getGridClass = (index) => {
     return 'col-span-12 ratio-2-1' // 2:1 ratio for last item
   }
   
-  return 'col-span-12 col-span-6-md' // 1:1 ratio for others
+  return 'col-span-12 col-span-6-sm' // 1:1 ratio for others
 }
 
 // Convert alignment to object-position
@@ -126,7 +131,7 @@ const getAlignItems = (alignment) => {
 .images-grid {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
-  gap: var(--pad-2);
+  gap: var(--pad-1);
 }
 
 .image-item {
@@ -135,9 +140,12 @@ const getAlignItems = (alignment) => {
   overflow: hidden;
 }
 
-@media (min-width: 801px) {
+@media (min-width: 800px) {
   .image-item.ratio-2-1 {
     aspect-ratio: 2/1;  
+  }
+  .images-grid {
+    gap: var(--pad-2);
   }
 }
 
@@ -155,17 +163,18 @@ const getAlignItems = (alignment) => {
   transition: transform 0.3s ease;
 }
 
-@media (max-width: 800px) {
+@media (max-width: 801px) {
+  .image-container {
+    justify-content: center !important;
+  }
   .image-container img {
     width: 100% !important;  
   }
-  .images-grid {
-    gap: var(--pad-2) 0px;
-  }
   .image-item {
     aspect-ratio: unset;
-    max-height: calc(100vw - calc(var(--pad-2) * 2));
+    max-height: calc(100vw - calc(var(--pad-1) * 2));
   }
 }
+
 
 </style>

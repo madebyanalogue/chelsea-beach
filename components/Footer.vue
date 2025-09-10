@@ -3,16 +3,16 @@
     <SectionMarquee />
     
     <footer>
-    <div id="footer" class="py6 py-md-2 grid grid-1 gap-2">
+    <div id="footer" class="py2 py-sm-3 py-md-2 grid grid-1 gap-2">
 
 
       <div class="wrapper">
-        <div class="grid gap-1">
+        <div class="grid gap-1 py-md-1 ptop">
 
           <!--ICON-->
-          <div class="col-span-2-md grid grid-2">
-            <div></div>
-            <div class="">
+          <div class="col-span-12 col-span-6-sm col-span-2-md grid grid-6 grid-md-2 py1 pbottom">
+            
+            <div class="col-span-2 col-start-1 col-span-1-md col-start-2-sm col-start-2-md">
               <NuxtLink to="/">
                 <Logo />
               </NuxtLink>
@@ -20,7 +20,7 @@
           </div>
 
           <!--COLUMN 1-->
-          <div class="col-span-4-md grid grid-1 gap-1">
+          <div class="col-span-12 col-span-6-sm col-span-4-md grid grid-1 gap-1">
 
             <!--CONTACT INFO-->
             <div class="col-span-3-md">
@@ -56,9 +56,11 @@
           </div>
 
           <!--COLUMN 2-->
-          <div class="col-span-3-md grid grid-1 gap-1">
+          <div class="col-span-12 col-span-6-sm col-span-3-md grid grid-1 gap-1 col-start-7-sm">
 
-            <div class="grid grid-1-auto gap-1">
+            <div class="grid grid-1-auto gap-2">
+
+              <div class="hide-md"></div>
 
               <!--OPENING TIMES-->
               <div v-if="openingTimes && openingTimes.length > 0" class="opening-times">
@@ -107,11 +109,11 @@
 
         <div class="grid h7">
 
-          <div class="col-span-2-md">
+          <div class="col-span-12 col-span-2-md">
           </div>
 
           <!-- COPYRIGHT -->
-          <div class="col-span-10-md">
+          <div class="col-span-12 col-span-6-sm col-start-7-sm col-start-1-md col-span-10-md">
             <div class="">© <span>{{ websiteTitle }}</span> {{ new Date().getFullYear() }}. All Rights Reserved.</div>
           </div>
               
@@ -151,7 +153,8 @@ const {
   linkedinUrl,
   instagramUrl,
   openingTimes,
-  title
+  title,
+  disablePreloader
 } = useSiteSettings();
 
 // Website title from Sanity
@@ -226,6 +229,22 @@ onMounted(() => {
     const footerRoot = document.getElementById('footer')
     footerRootRef.value = footerRoot || null
     if (!subfooterEl || !footerRoot) return
+
+    // If preloader is disabled, reveal immediately and skip gating
+    if (disablePreloader.value) {
+      // Reveal subfooter
+      subfooterEl.style.transform = 'scaleY(1)'
+      const subContentImmediate = subfooterEl.querySelector('.wrapper')
+      if (subContentImmediate) subContentImmediate.style.opacity = '1'
+      subfooterEl.dataset.revealed = '1'
+      // Reveal footer wrappers
+      const immediateBlocks = footerRoot.querySelectorAll(':scope > .wrapper')
+      immediateBlocks.forEach((blk) => {
+        blk.style.opacity = '1'
+      })
+      footerRoot.dataset.revealed = '1'
+      return
+    }
 
     // Initial state for subfooter container and its content
     subfooterEl.style.transformOrigin = 'bottom'
