@@ -76,11 +76,13 @@
             </div>
 
             <!-- Testimonial -->
-            <div class="col-span-12 col-span-3-md testimonial show-md">
-              <div v-if="testimonial && testimonial.quote" class="grid grid-1 h4 p1">
-                <blockquote class="testimonial-quote" v-html="testimonial.quote.replace(/\r?\n|\r/g, '<br>')">
-                </blockquote>
-                <cite v-if="testimonial.cite" class="testimonial-cite uppercase">{{ testimonial.cite }}</cite>
+            <div class="col-span-12 col-span-3-md show-md">
+              <div class="testimonial">
+                <div v-if="testimonial && testimonial.quote" class="grid grid-1 h4 p1">
+                  <blockquote class="testimonial-quote" v-html="testimonial.quote.replace(/\r?\n|\r/g, '<br>')">
+                  </blockquote>
+                  <cite v-if="testimonial.cite" class="testimonial-cite uppercase">{{ testimonial.cite }}</cite>
+                </div>
               </div>
             </div>
 

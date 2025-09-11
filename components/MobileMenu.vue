@@ -302,7 +302,7 @@ const closeNav = () => {
 .menu-link-heading {
   z-index: 1;
   text-transform: none;
-  font-size: 40px;
+  font-size: 38px;
   font-weight: 400;
   line-height: 0.75;
   transition: transform 0.55s cubic-bezier(0.65, 0.05, 0, 1);
@@ -342,8 +342,14 @@ const closeNav = () => {
 .p-large {
   margin-top: 0;
   margin-bottom: 0;
-  font-size: 1.125em;
+  font-size: 20px;
 }
+@media (min-width: 800px) {
+.p-large {
+    font-size: 20px;
+  }
+}
+
 
 .p-large.text-link {
   color: var(--dark-grey);

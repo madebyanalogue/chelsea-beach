@@ -1,7 +1,7 @@
 <template>
   <section class="news-section">
     <div class="wrapper">
-      <div class="grid grid-1 gap-2 py3 px5">
+      <div class="grid grid-1 gap-2 py2 py-sm-3 px-md-5">
 
         <!-- Top Text Section -->
         <div v-if="topText" class="grid grid-1 grid-md-2">
@@ -11,7 +11,7 @@
         </div>
 
         
-        <div class="grid grid-1 grid-md-2 gap-4 gap-2-md py2 pbottom underline-links reverse">
+        <div class="grid grid-1 grid-md-2 gap-2 gap-2-md py2 pbottom underline-links reverse">
           <div v-for="(post, index) in posts" :key="post._id" class="news-item" :data-summary="post.summary">
             <div class="grid grid-1">
               <NuxtImg 

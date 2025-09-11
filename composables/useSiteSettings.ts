@@ -10,6 +10,9 @@ export const useSiteSettings = () => {
       console.warn('Failed to fetch site settings, using defaults:', err)
       return {}
     }
+  }, {
+    server: true,
+    default: () => ({})
   })
 
   return {

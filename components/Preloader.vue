@@ -123,9 +123,16 @@ const fetchLogotypeSvg = async () => {
   
   if (isSvg) {
     try {
-      const response = await fetch(url)
-      const svgText = await response.text()
-      logotypeSvgContent.value = svgText
+      // Use the proxy endpoint to avoid CORS issues
+      const proxyUrl = `/api/proxy-svg?url=${encodeURIComponent(url)}`
+      const response = await fetch(proxyUrl)
+      if (response.ok) {
+        const svgText = await response.text()
+        logotypeSvgContent.value = svgText
+      } else {
+        console.warn('Failed to fetch SVG content via proxy:', response.status)
+        logotypeSvgContent.value = null
+      }
     } catch (error) {
       console.warn('Failed to fetch SVG content:', error)
       logotypeSvgContent.value = null
@@ -182,22 +189,22 @@ const initPreloaderAnimation = () => {
     animationTimeline.set('.image-sequence', { opacity: 0 })
     animationTimeline.to('.image-sequence', { 
       opacity: 1, 
-      duration: 1.0, 
+      duration: 0.5, 
       ease: "power2.out" 
     })
     
     // Stage 2: Logotype fades in overlaid (after image)
-    const logotypeStart = 1.0 // Start after image fade in
+    const logotypeStart = 0.5 // Start after image fade in
     animationTimeline.set('.website-icon-container', { opacity: 0, visibility: 'visible' }, logotypeStart)
     animationTimeline.to('.website-icon-container', { 
       opacity: 1, 
-      duration: 1.0, 
+      duration: 0.8, 
       ease: "power2.out" 
     }, logotypeStart)
     
     // Stage 3: Transform up and out (after logotype)
-    const holdTime = logotypeStart + 1.0 // Hold for 1 second after logotype appears
-    const exitTime = holdTime + 0.8 // Exit animation duration
+    const holdTime = logotypeStart + 0.5 // Hold for 1 second after logotype appears
+    const exitTime = holdTime + 0.5 // Exit animation duration
     
     // Animate preloader container up and out
     animationTimeline.to('.preloader-container', {

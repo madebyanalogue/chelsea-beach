@@ -44,10 +44,12 @@ const route = useRoute()
 // Use the usePageSettings composable instead of duplicating the data fetching
 const { page: pageData, error, pending } = usePageSettings()
 
+// Get site settings once
+const { title: websiteTitle } = useSiteSettings()
+
 // Watch for changes in pageData to update title
 watch(() => pageData.value, (newData) => {
   if (newData) {
-    const { title: websiteTitle } = useSiteSettings()
     const pageTitle = newData.title || 'Home'
     const fullTitle = `${websiteTitle.value} | ${pageTitle}`
     useHead({
@@ -58,7 +60,6 @@ watch(() => pageData.value, (newData) => {
 
 // Page meta
 useHead(() => {
-  const { title: websiteTitle } = useSiteSettings()
   const title = pageData.value?.title || 'Home';
   return { 
     title: `${websiteTitle.value} | ${title}`

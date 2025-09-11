@@ -3,11 +3,13 @@ import { defineNuxtPlugin } from '#app'
 export default defineNuxtPlugin(() => {
   if (process.server) return
 
-  // Temporarily disabled to prevent site breaking
-  console.log('Highlight text plugin loaded but disabled for now')
-  
-  // TODO: Re-enable once GSAP is working properly
-  /*
+  // Check if GSAP is available before proceeding
+  if (typeof window === 'undefined' || !window.gsap) {
+    console.warn('GSAP not available, highlight text plugin disabled')
+    return
+  }
+
+  console.log('Highlight text plugin loaded and enabled')
   let contexts = []
 
   function splitTextIntoChars(element) {
@@ -120,5 +122,4 @@ export default defineNuxtPlugin(() => {
   // Expose functions globally if needed
   window.initHighlightText = initHighlightText
   window.cleanupHighlightText = cleanup
-  */
 })
