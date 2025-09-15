@@ -1020,6 +1020,10 @@ gap:0;
   opacity: 1;
   transition: opacity 1s ease;
  }
+ .lightbox-wrap.is-active  .scroll-indicator,
+ .lightbox-wrap.is-active .lightbox-nav__button {
+  pointer-events: all;
+ }
   .scroll-indicator div:first-child {
   opacity: 0;
   }
@@ -1126,8 +1130,8 @@ gap:0;
   left: 0;
   right: 0;
   bottom: 0;
+  pointer-events: none;
 }
-
 .lightbox-nav__col {
   width: 33.333%;
 }
