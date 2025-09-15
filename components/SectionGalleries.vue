@@ -42,76 +42,6 @@
           </div>
         </div>
         
-        <!-- Lightbox Modal -->
-        <div 
-          aria-modal="true" 
-          data-lightbox="wrapper" 
-          role="dialog" 
-          class="lightbox-wrap"
-          :style="selectedGallery ? { backgroundColor: getColorForGallery(selectedGallery._id) } : {}"
-        >
-          <div class="lightbox-img__wrap" @click.stop>
-            <div class="lightbox-img__list">
-              <div 
-                v-for="(item, index) in selectedGallery?.items || []"
-                :key="index"
-                data-lightbox="item" 
-                class="lightbox-img__item"
-              >
-                  <img 
-                    v-if="item._type === 'image' && item.asset"
-                    :src="getImageUrl(item)"
-                    :alt="`${selectedGallery?.title} - Image ${index + 1}`"
-                    loading="lazy" 
-                    class="lightbox-img"
-                  />
-                  <video
-                    v-else-if="item._type === 'file' && item.asset"
-                    :src="item.asset.url"
-                    controls
-                    class="lightbox-img"
-                  >
-                    Your browser does not support the video tag.
-                  </video>
-                  <div v-else class="thumbnail-placeholder">
-                    <span>No Image</span>
-                  </div>
-              </div>
-            </div>
-          </div>
-          <div class="lightbox-nav">
-            <div data-lightbox="nav" class="lightbox-nav__col start">
-              <p class="lightbox-nav__text">
-                <span data-lightbox="counter-current">1</span> / 
-                <span data-lightbox="counter-total">{{ selectedGallery?.items?.length || 0 }}</span>
-              </p>
-            </div>
-            <div data-lightbox="nav" class="lightbox-nav__col center">
-              <button 
-                data-lightbox="prev" 
-                class="lightbox-nav__button"
-              >
-                <div class="lightbox-nav__dot"></div>
-                <span class="lightbox-nav__text">prev</span>
-              </button>
-              <button 
-                data-lightbox="next" 
-                class="lightbox-nav__button"
-              >
-                <span class="lightbox-nav__text">next</span>
-                <div class="lightbox-nav__dot"></div>
-              </button>
-            </div>
-            <div data-lightbox="nav" class="lightbox-nav__col end">
-              <button 
-                data-lightbox="close" 
-                class="lightbox-nav__button"
-              >
-                <span class="lightbox-nav__text">close</span>
-              </button>
-            </div>
-          </div>
-        </div>
       </div>
 
       <!-- Load More Button -->
@@ -148,11 +78,60 @@
           <div class="load-more-button__inner">
             <div>More</div>
           </div>
-          More
         </button>
       </div>
     </div>
   </section>
+
+
+    <!-- Lightbox Modal -->
+    <div 
+      aria-modal="true" 
+      data-lightbox="wrapper" 
+      role="dialog" 
+      class="lightbox-wrap"
+      :style="selectedGallery ? { backgroundColor: getColorForGallery(selectedGallery._id) } : {}"
+      >
+      <div class="lightbox-img__wrap" @click.stop>
+        
+        <div class="lightbox-img__list">
+          <div 
+            v-for="(item, index) in selectedGallery?.items || []"
+            :key="index"
+            data-lightbox="item" 
+            class="lightbox-img__item"
+          >
+              <img 
+                v-if="item._type === 'image' && item.asset"
+                :src="getImageUrl(item)"
+                :alt="`${selectedGallery?.title} - Image ${index + 1}`"
+                loading="lazy" 
+                class="lightbox-img"
+              />
+              <video
+                v-else-if="item._type === 'file' && item.asset"
+                :src="item.asset.url"
+                controls
+                class="lightbox-img"
+              >
+                Your browser does not support the video tag.
+              </video>
+              <div v-else class="thumbnail-placeholder">
+                <span>No Image</span>
+              </div>
+          </div>
+        </div>
+      </div>
+      <div class="lightbox-nav">
+        <div v-if="indicatorEnabled" class="scroll-indicator" :class="{ 'is-hidden': !showScrollIndicator }"><div>Scroll Down</div><div><span></span></div></div>
+        <button 
+          data-lightbox="close" 
+          class="lightbox-nav__button"
+        ><div></div>
+        </button>
+      </div>
+    </div>
+
 </template>
 
 <script setup>
@@ -185,6 +164,9 @@ const loadMoreBtnRef = ref(null)
 const selectedGallery = ref(null)
 const isModalOpen = ref(false)
 const hoveredColor = ref(null)
+const showScrollIndicator = ref(false)
+const indicatorEnabled = ref(false)
+ 
 
 // Computed properties
 const displayedGalleries = computed(() => galleries.value.slice(0, displayedCount.value))
@@ -192,26 +174,26 @@ const hasMoreGalleries = computed(() => galleries.value.length > displayedCount.
 
 // Methods
 const fadeInThumbs = (items) => {
-  console.log('fadeInThumbs called with items:', items?.length)
+  
   if (!items || !items.length) return
   const gsap = window.gsap
   // Only target items that haven't animated yet
   const targets = Array.from(items).filter(el => !el.dataset.animated)
-  console.log('Targets to animate:', targets.length)
+  
   if (!targets.length) {
-    console.log('No targets to animate - all already animated')
+    
     return
   }
   gsap.set(targets, { autoAlpha: 0, y: 12 })
-  console.log('Starting animation for', targets.length, 'items')
+  
   gsap.to(targets, { 
     autoAlpha: 1, 
     y: 0, 
-    duration: 0.55, 
-    stagger: 0.08, 
+    duration: 0.9, 
+    stagger: 0.12, 
     ease: 'power2.out',
     onStart: () => {
-      console.log('Animation started')
+      
       targets.forEach(el => el.dataset.animated = '1')
     }
   })
@@ -266,7 +248,7 @@ const setupAnimation = () => {
     const { gsap, ScrollTrigger } = window
     gsap.registerPlugin(ScrollTrigger)
     const items = gridRef.value.querySelectorAll('.gallery-grid__item')
-    console.log('Found items:', items.length)
+    
     
     if (items.length === 0) return // No items to animate
     
@@ -276,21 +258,21 @@ const setupAnimation = () => {
     // Check if section is already in view
     const sectionRect = sectionRef.value.getBoundingClientRect()
     const isInView = sectionRect.top < window.innerHeight && sectionRect.bottom > 0
-    console.log('Section in view:', isInView)
+    
     
     if (isInView) {
       // If already in view, animate immediately
-      console.log('Animating immediately')
+      
       fadeInThumbs(items)
     } else {
       // Otherwise, wait for scroll trigger
-      console.log('Setting up scroll trigger')
+      
       ScrollTrigger.create({
         trigger: sectionRef.value,
         start: 'top 80%',
         once: true,
         onEnter: () => {
-          console.log('ScrollTrigger fired')
+          
           fadeInThumbs(items)
         }
       })
@@ -356,29 +338,23 @@ const createLightbox = (container) => {
   const gsap = window.gsap
   const Flip = window.Flip || (window.gsap && window.gsap.Flip)
   
+  // Support lightbox rendered outside the section by using a global root
+  const lightboxRoot = document.querySelector('[data-lightbox="wrapper"]')
+
   const elements = {
-    wrapper: container.querySelector('[data-lightbox="wrapper"]'),
+    wrapper: lightboxRoot,
     triggers: container.querySelectorAll('[data-lightbox="trigger"]'),
     triggerParents: container.querySelectorAll('[data-lightbox="trigger-parent"]'),
-    items: container.querySelectorAll('[data-lightbox="item"]'),
-    nav: container.querySelectorAll('[data-lightbox="nav"]'),
+    items: lightboxRoot ? lightboxRoot.querySelectorAll('[data-lightbox="item"]') : [],
     titles: container.querySelectorAll('.gallery-title'),
-    counter: {
-      current: container.querySelector('[data-lightbox="counter-current"]'),
-      total: container.querySelector('[data-lightbox="counter-total"]')
-    },
     buttons: {
-      prev: container.querySelector('[data-lightbox="prev"]'),
-      next: container.querySelector('[data-lightbox="next"]'),
-      close: container.querySelector('[data-lightbox="close"]')
+      close: lightboxRoot ? lightboxRoot.querySelector('[data-lightbox="close"]') : null
     }
   };
 
   const mainTimeline = gsap.timeline();
 
-  if (elements.counter.total) {
-    elements.counter.total.textContent = elements.triggers.length;
-  }
+  // no-op: nav and counters removed
   
   function closeLightbox() {
     mainTimeline.clear();
@@ -387,7 +363,7 @@ const createLightbox = (container) => {
     const otherSectionChildren = otherSections.length > 0 ? 
       Array.from(otherSections).map(section => Array.from(section.children)).flat() : [];
     
-    gsap.killTweensOf([elements.wrapper, elements.nav, elements.triggerParents, elements.items, loadMoreContainer, ...otherSectionChildren]);
+    gsap.killTweensOf([elements.wrapper, elements.triggerParents, elements.items, loadMoreContainer, ...otherSectionChildren]);
     
     const tl = gsap.timeline({
       defaults: { ease: "power2.inOut" },
@@ -408,10 +384,15 @@ const createLightbox = (container) => {
             el.style.setProperty('background', 'var(--section-bg)', 'important')
           })
         }
+        // Clear dynamic item count CSS variable
+        if (elements.wrapper) {
+          elements.wrapper.style.removeProperty('--items')
+        }
       }
     });
 
-    const originalItem = container.querySelector('[data-lightbox="original"]');
+    // Original image may now live inside the global lightbox root
+    const originalItem = document.querySelector('[data-lightbox="original"]');
     const originalParent = container.querySelector('[data-lightbox="original-parent"]');
     
     // Filter out the original parent from triggerParents to avoid animating the cloned item
@@ -450,8 +431,8 @@ const createLightbox = (container) => {
         visibility: "visible"
       });
       
-      // Clean up data attributes
-      originalParent.removeAttribute('data-lightbox');
+      // Restore trigger-parent marker for future opens and clear original flag on the lightbox image
+      originalParent.setAttribute('data-lightbox', 'trigger-parent');
       originalItem.removeAttribute('data-lightbox');
       
       // Hide the original image in the lightbox (it stays there)
@@ -464,19 +445,19 @@ const createLightbox = (container) => {
       autoAlpha: 1,
       opacity: 1,
       visibility: "visible",
-      duration: 0.8,
-      stagger: 0.04,
+      duration: 0.5,
+      stagger: 0.03,
       overwrite: true
-    }, 1.1111) // Add 0.3 second delay
+    }, 0)
     
     // Fade back in load more container and other page sections
     
     if (loadMoreContainer) {
       tl.to(loadMoreContainer, {
         opacity: 1,
-        duration: 0.8,
+        duration: 0.5,
         overwrite: true
-      }, 1.1111); // Same delay as gallery thumbnails
+      }, 0);
     }
     
     if (otherSections.length > 0) {
@@ -488,34 +469,65 @@ const createLightbox = (container) => {
       if (otherSectionChildren.length > 0) {
         tl.to(otherSectionChildren, {
           opacity: 1,
-          duration: 0.8,
-          stagger: 0.04,
+          duration: 0.5,
+          stagger: 0.03,
           overwrite: true
-        }, 1.1111); // Same delay as gallery thumbnails
+        }, 0);
       }
     }
     
     tl.to(elements.titles, {
       autoAlpha: 1,
-      duration: 0.8,
-      stagger: 0.04,
+      duration: 0.5,
+      stagger: 0.03,
       overwrite: true
-    }, 1.1111) // Add 0.3 second delay
-    .to(elements.nav, {
+    }, 0)
+    // First fade out all lightbox items and the nav
+    .to([elements.items, elements.wrapper.querySelector('.lightbox-nav')], {
       autoAlpha: 0,
-      y: "1rem",
-      duration: 0.6,
-      stagger: 0
-    },"<")
+      duration: 0.3,
+      stagger: 0.02,
+      overwrite: true
+    }, 0)
+    // Ensure active slide is hidden as well
+    .to(activeLightboxSlide, {
+      autoAlpha: 0,
+      duration: 0.25,
+      overwrite: true
+    }, "<")
+    // Then fade the lightbox background/wrapper
     .to(elements.wrapper, {
       backgroundColor: "rgba(0,0,0,0)",
-      duration: 0.6
+      duration: 0.4,
+      overwrite: true
+    }, 0.05)
+    // Bring header back into view
+    .to(document.querySelector('header'), {
+      yPercent: 0,
+      duration: 0.35,
+      ease: 'power2.inOut'
     }, "<")
-    .to(activeLightboxSlide,{
-      autoAlpha:0,
-      duration: 0.6,
-    },"<")
+    .add(() => {
+      // Cleanup scroll/debug state
+      if (elements._scrollBind) {
+        const { lbWrap, onScroll, onResize } = elements._scrollBind
+        lbWrap.removeEventListener('scroll', onScroll)
+        window.removeEventListener('resize', onResize)
+        lbWrap.style.removeProperty('--scrolled-height')
+        elements._scrollBind = null
+      }
+      
+    })
     .set([elements.items, activeLightboxSlide, elements.triggerParents],  { clearProps: "all" })
+    // Cleanup scroll bindings
+    .add(() => {
+      if (elements._scrollBind) {
+        const { lbWrap, onScroll, onResize } = elements._scrollBind
+        lbWrap.removeEventListener('scroll', onScroll)
+        window.removeEventListener('resize', onResize)
+        elements._scrollBind = null
+      }
+    })
     
     mainTimeline.add(tl);
   }
@@ -568,11 +580,15 @@ const createLightbox = (container) => {
           await nextTick()
           
           // Re-query elements after DOM update
-          elements.items = container.querySelectorAll('[data-lightbox="item"]')
-          elements.counter.total = container.querySelector('[data-lightbox="counter-total"]')
-          elements.counter.current = container.querySelector('[data-lightbox="counter-current"]')
-          elements.wrapper = container.querySelector('[data-lightbox="wrapper"]')
-          elements.nav = container.querySelectorAll('[data-lightbox="nav"]')
+          const liveLightboxRoot = document.querySelector('[data-lightbox="wrapper"]')
+          elements.items = liveLightboxRoot ? liveLightboxRoot.querySelectorAll('[data-lightbox="item"]') : []
+          elements.wrapper = liveLightboxRoot
+
+          // Set dynamic CSS variable for number of items
+          if (elements.wrapper) {
+            const itemCount = Array.isArray(selectedGallery.value?.items) ? selectedGallery.value.items.length : elements.items.length
+            elements.wrapper.style.setProperty('--items', String(itemCount))
+          }
           
           // Check if elements exist before proceeding
           if (!elements.wrapper || !elements.items.length) {
@@ -585,8 +601,18 @@ const createLightbox = (container) => {
           const otherSections = document.querySelectorAll('section:not(.section-galleries)');
           const otherSectionChildren = otherSections.length > 0 ? 
             Array.from(otherSections).map(section => Array.from(section.children)).flat() : [];
-          gsap.killTweensOf([elements.wrapper, elements.nav, elements.triggerParents, loadMoreContainer, ...otherSectionChildren]);
+          gsap.killTweensOf([elements.wrapper, elements.triggerParents, loadMoreContainer, ...otherSectionChildren]);
           
+          // Clear any stale original markers from previous opens
+          const prevOriginalParent = container.querySelector('[data-lightbox="original-parent"]')
+          if (prevOriginalParent) {
+            prevOriginalParent.setAttribute('data-lightbox', 'trigger-parent')
+          }
+          const prevOriginal = document.querySelector('[data-lightbox="original"]')
+          if (prevOriginal) {
+            prevOriginal.removeAttribute('data-lightbox')
+          }
+
           const img = trigger.querySelector(".gallery-item__media-container img")
           const state = Flip ? Flip.getState(img) : null;
           
@@ -596,12 +622,94 @@ const createLightbox = (container) => {
           trigger.setAttribute('data-lightbox', 'original-parent');
           img.setAttribute('data-lightbox', 'original');
           
-          updateActiveItem(0); // Start with first item
-          container.addEventListener('click', handleOutsideClick);
+          // Start by showing first item only (nav removed)
+          if (elements.wrapper) {
+            elements.wrapper.addEventListener('click', handleOutsideClick);
+          }
           
           const tl = gsap.timeline();
           elements.wrapper.classList.add('is-active');
+          // Animate lightbox background from transparent to gallery color
+          const wrapperBg = getColorForGallery(galleryId) || 'rgba(0,0,0,0.85)'
+          tl.fromTo(elements.wrapper, {
+            backgroundColor: 'rgba(0,0,0,0)'
+          }, {
+            backgroundColor: wrapperBg,
+            duration: 0.6,
+            ease: 'power2.inOut'
+          }, 0)
+          // Tie vertical scroll to horizontal translateX of the list
+          const lbWrap = elements.wrapper.querySelector('.lightbox-img__wrap')
+          const lbList = elements.wrapper.querySelector('.lightbox-img__list')
+          const navEl = elements.wrapper.querySelector('.lightbox-nav')
+          if (navEl) {
+            gsap.set(navEl, { autoAlpha: 0 })
+          }
+          if (lbWrap && lbList) {
+            gsap.set(lbList, { willChange: 'transform' })
+            // Determine which element actually scrolls (wrap or outer wrapper)
+            const getScroller = () => {
+              const canWrapScroll = (lbWrap.scrollHeight - lbWrap.clientHeight) > 1
+              const canOuterScroll = (elements.wrapper.scrollHeight - elements.wrapper.clientHeight) > 1
+              return canWrapScroll ? lbWrap : (canOuterScroll ? elements.wrapper : lbWrap)
+            }
+            let scroller = getScroller()
+            // Show indicator only when more than one item
+            const cssItems = parseInt(getComputedStyle(elements.wrapper).getPropertyValue('--items')) || 0
+            const domItems = elements.items?.length || 0
+            const stateItems = Array.isArray(selectedGallery.value?.items) ? selectedGallery.value.items.length : 0
+            const itemsCountInit = Math.max(cssItems, domItems, stateItems, 1)
+            indicatorEnabled.value = itemsCountInit > 1
+            showScrollIndicator.value = indicatorEnabled.value
+            const updateX = () => {
+              // Re-evaluate scroller in case layout changed
+              scroller = getScroller()
+              const maxV = Math.max(scroller.scrollHeight - scroller.clientHeight, 1)
+              const progress = scroller.scrollTop / maxV
+              const maxH = Math.max(lbList.scrollWidth - lbWrap.clientWidth, 0)
+              const x = -progress * maxH
+              gsap.to(lbList, { x, duration: 0.1, ease: 'none', overwrite: true })
+              // Inline CSS var for normalized scroll (0% .. -((items-1)/items*100)%)
+              const cssItemsNow = parseInt(getComputedStyle(elements.wrapper).getPropertyValue('--items')) || 0
+              const domItemsNow = elements.items?.length || 0
+              const stateItemsNow = Array.isArray(selectedGallery.value?.items) ? selectedGallery.value.items.length : 0
+              const itemsCount = Math.max(cssItemsNow, domItemsNow, stateItemsNow, 1)
+              const denom = Math.max((itemsCount - 1) * scroller.clientHeight, 1)
+              const scrollProgressNorm = Math.min(1, Math.max(0, scroller.scrollTop / denom))
+              // Cap translate to (items-1)/items of the distance so last item aligns flush
+              const maxPercent = ((itemsCount - 1) / itemsCount) * 100
+              const percentX = -(scrollProgressNorm * maxPercent)
+              scroller.style.setProperty('--scrolled-height', `${percentX.toFixed(2)}%`)
+              // Hide indicator on first scroll
+              if (indicatorEnabled.value && showScrollIndicator.value && scroller.scrollTop > 0) {
+                // trigger fade-out; a 1s CSS transition handles opacity
+                showScrollIndicator.value = false
+              }
+              
+            }
+            const onScroll = () => updateX()
+            const onResize = () => updateX()
+            lbWrap.addEventListener('scroll', onScroll, { passive: true })
+            elements.wrapper.addEventListener('scroll', onScroll, { passive: true })
+            window.addEventListener('resize', onResize)
+            updateX()
+            // store for cleanup
+            elements._scrollBind = { lbWrap, onScroll, onResize }
+          }
+          // Slide header out of view while lightbox is open
+          const pageHeader = document.querySelector('header')
+          if (pageHeader) {
+            tl.to(pageHeader, {
+              yPercent: -100,
+              duration: 0.4,
+              ease: 'power2.inOut'
+            }, 0)
+          }
           const targetItem = elements.items[0]; // First item
+          const otherItems = Array.from(elements.items).slice(1);
+          // Hide all items first except first; they will fade in sequentially after the first animation
+          gsap.set(elements.items, { autoAlpha: 0 });
+          gsap.set(targetItem, { autoAlpha: 1 });
           
           const lightboxImage = targetItem.querySelector('img');
           if (lightboxImage) {
@@ -665,16 +773,24 @@ const createLightbox = (container) => {
               );
             }
           }
+          // After the first item's FLIP completes, fade in the remaining items sequentially
+          if (otherItems.length) {
+            tl.to(otherItems, {
+              autoAlpha: 1,
+              duration: 1,
+              stagger: 0.08,
+              ease: 'power2.out'
+            }, 0.8);
+            if (navEl) {
+              tl.to(navEl, {
+                autoAlpha: 1,
+                duration: 0.6,
+                ease: 'power2.out'
+              }, '<')
+            }
+          }
           
-          tl.fromTo(elements.nav, {
-            autoAlpha: 0,
-            y: "1rem"
-          }, {
-            autoAlpha: 1,
-            y: "0rem",
-            duration: 0.6,
-            stagger: { each: 0.05, from: "center" }
-          }, 0.2);
+          // nav animations removed
           
           mainTimeline.add(tl);
         } catch (error) {
@@ -684,42 +800,16 @@ const createLightbox = (container) => {
     });
   });
 
-  if (elements.buttons.next) {
-    elements.buttons.next.addEventListener('click', () => {
-      const currentIndex = Array.from(elements.items).findIndex(item => 
-        item.classList.contains('is-active')
-      );
-      const nextIndex = (currentIndex + 1) % elements.items.length;
-      updateActiveItem(nextIndex);
-    });
-  }
-
-  if (elements.buttons.prev) {
-    elements.buttons.prev.addEventListener('click', () => {
-      const currentIndex = Array.from(elements.items).findIndex(item => 
-        item.classList.contains('is-active')
-      );
-      const prevIndex = (currentIndex - 1 + elements.items.length) % elements.items.length;
-      updateActiveItem(prevIndex);
-    });
-  }
+  // nav removed: no next/prev handlers
 
   if (elements.buttons.close) {
     elements.buttons.close.addEventListener('click', closeLightbox);
   }
 
   document.addEventListener('keydown', (event) => {
-    if (!elements.wrapper.classList.contains('is-active')) return;
-    switch (event.key) {
-      case 'Escape':
-        closeLightbox();
-        break;
-      case 'ArrowRight':
-        elements.buttons.next?.click();
-        break;
-      case 'ArrowLeft':
-        elements.buttons.prev?.click();
-        break;
+    if (!elements.wrapper || !elements.wrapper.classList.contains('is-active')) return;
+    if (event.key === 'Escape') {
+      closeLightbox();
     }
   });
 }
@@ -899,21 +989,72 @@ gap:0;
   justify-content: center;
   align-items: center;
   width: 100%;
-  height: 100dvh;
+  height: calc(100svh * 1);
   display: none;
   position: fixed;
+  overflow:scroll;
+  justify-content: start;
+  align-items: start;
   inset: 0% 0% auto;
   transition: background-color 0.3s ease;
 }
-
 .lightbox-wrap.is-active {
   display: flex;
 }
 
 .lightbox-img__wrap {
-  width: 100vw;
-  height: calc(100svh - 0em);
-  overflow:scroll;
+  height: calc(100svh * var(--items));
+  overflow-x: hidden;
+  overflow-y: scroll;
+  padding-left: calc(calc(100vw - 100svh) / 2);
+}
+
+ .scroll-indicator {
+  position: fixed;
+  bottom: 80px;
+  padding: 0 20px;
+  left: 0;
+  width: 100%;
+  height: auto;
+  text-align: center;
+  opacity: 1;
+  transition: opacity 1s ease;
+ }
+  .scroll-indicator div:first-child {
+  opacity: 0;
+  }
+  .scroll-indicator div:last-child {
+  animation: scroll-indicator 1s infinite linear;
+  }
+ 
+ .scroll-indicator span {
+  content: '';
+  height: 25px;
+  width: 25px;
+  border-top:1px solid currentColor;
+  border-right:1px solid currentColor;
+  margin-left: -0px;
+  margin-bottom: -0px;
+  position: absolute;
+  bottom: -30px;
+  left: 50%;
+  transform: translateX(-50%) rotate(135deg);
+}
+
+@keyframes scroll-indicator {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.scroll-indicator.is-hidden {
+  opacity: 0;
 }
 
 .lightbox-img__container {
@@ -924,16 +1065,30 @@ gap:0;
 .lightbox-img__list {
   justify-content: center;
   align-items: center;
-  width: 100%;
-  height: 100%;
+  width: calc(100svh * var(--items));
+  will-change: transform;
+  transform: translateX(var(--scrolled-height)) !important;
+  height: 100svh;
   display: flex;
-  position: relative;
-  gap: var(--pad-4);
-  padding: var(--pad-2);
+  position: fixed;
+  pointer-events: none;
+  top: 0;
+}
+@media (max-width: 1023px) {
+.lightbox-img__list {
+  height: calc(100svh * var(--items));
+  width: 100%;
+  flex-direction: column;
+  transform: translateY(var(--scrolled-height)) !important;
+}
 }
 
 .lightbox-img__item {
-  /* visibility: hidden; */
+  height:100svh;
+  width:100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .lightbox-img__item.is-active {
@@ -943,16 +1098,22 @@ gap:0;
 .lightbox-img {
   object-fit: contain;
   min-width: auto;
-  max-height: 100%;
+  height:100%;
+  width:100%;
 }
 
-.lightbox-img__item img { 
+.lightbox-img__item > * { 
   object-fit: contain !important;
   min-width: auto;
-  width: auto;
-  max-height: 100vh;
-  max-width: 100vw;
+  width: 100%;
+  height:100%;
+  max-height: 90vh;
+  max-width: 90vh;
 }
+.lightbox-img__item > video {
+  height: auto;
+  width: auto;
+} 
 
 /* Navigation */
 .lightbox-nav {
@@ -960,10 +1121,11 @@ gap:0;
   justify-content: space-between;
   align-items: center;
   display: flex;
-  position: absolute;
-  bottom: var(--button-spacing);
-  left: var(--button-spacing);
-  right: var(--button-spacing);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 }
 
 .lightbox-nav__col {
@@ -996,20 +1158,31 @@ gap:0;
 }
 
 .lightbox-nav__button {
-  grid-column-gap: .5em;
-  grid-row-gap: .5em;
-  justify-content: flex-start;
-  align-items: center;
-  margin: -1em;
-  padding: 1em;
-  display: flex;
-  border: none;
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 80px;
+  height: 80px;
   cursor: pointer;
 }
-
-.lightbox-nav__button:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.1);
+.lightbox-nav__button div:after,
+.lightbox-nav__button div:before {
+  content: '';
+  height: 1px;
+  width: 30px;
+  border-top:1px solid currentColor;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 100;
+  transform: translate(-50%) rotate(45deg);
 }
+.lightbox-nav__button div:before {
+  transform: translate(-50%) rotate(-45deg);
+}
+/* .lightbox-nav__button:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+} */
 
 .lightbox-nav__button:disabled {
   opacity: 0.5;
@@ -1051,6 +1224,15 @@ gap:0;
   text-transform: uppercase;
   font-size: var(--h5);
 }
+.load-more-button:hover {
+  letter-spacing: 0.5em;
+}
+.load-more-button svg {
+  transition: all 0.6s ease;
+}
+.load-more-button:hover svg {
+transform: scale(.95);
+}
 .load-more-button > * {
   position: absolute;
   width: 100%;
@@ -1065,6 +1247,7 @@ gap:0;
   display: flex;
   justify-content: center;
   align-items: center;
+  transition: all 0.6s ease;
 }
 
 .gallery-grid__item:not([data-animated="1"]) {
