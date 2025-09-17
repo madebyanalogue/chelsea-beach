@@ -3,18 +3,18 @@ import { ref } from 'vue'
 export const useColorExtraction = () => {
   const extractedColors = ref(new Map())
 
-  // Predefined color palette for fallback
+  // Predefined color palette for fallback - muted and natural
   const fallbackColors = [
-    'rgb(255, 99, 132)',   // Pink
-    'rgb(54, 162, 235)',   // Blue
-    'rgb(255, 205, 86)',  // Yellow
-    'rgb(75, 192, 192)',  // Teal
-    'rgb(153, 102, 255)', // Purple
-    'rgb(255, 159, 64)',  // Orange
-    'rgb(199, 199, 199)', // Gray
-    'rgb(83, 102, 255)',  // Indigo
-    'rgb(78, 205, 196)',  // Mint
-    'rgb(255, 107, 107)', // Red
+    'rgb(120, 100, 80)',   // Warm brown
+    'rgb(100, 120, 100)',  // Muted green
+    'rgb(120, 110, 100)',  // Beige
+    'rgb(110, 100, 120)',  // Muted purple
+    'rgb(100, 100, 100)',  // Neutral gray
+    'rgb(130, 110, 90)',   // Warm taupe
+    'rgb(90, 110, 100)',   // Sage green
+    'rgb(110, 120, 110)',  // Soft green
+    'rgb(100, 90, 110)',   // Muted lavender
+    'rgb(120, 100, 90)',   // Warm beige
   ]
 
   const extractColorFromImage = async (imageUrl) => {
