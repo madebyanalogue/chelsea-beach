@@ -31,6 +31,9 @@
 /* Removed empty :root ruleset at 1024px */
 
 
+.logotype-svg svg > * {
+  fill:currentColor;
+}
 
 #logo svg {
   width: auto;

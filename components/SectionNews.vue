@@ -87,14 +87,14 @@ onMounted(async () => {
   // Debug: Check if images are rendered with correct attributes
   nextTick(() => {
     const newsImages = document.querySelectorAll('[data-image-overlay]')
-    console.log('[SectionNews] Found images with data-image-overlay:', newsImages.length)
+    //console.log('[SectionNews] Found images with data-image-overlay:', newsImages.length)
     newsImages.forEach((img, i) => {
-      console.log(`[SectionNews] Image ${i}:`, {
-        tagName: img.tagName,
-        src: img.src,
-        alt: img.alt,
-        hasOverlay: img.hasAttribute('data-image-overlay')
-      })
+        // console.log(`[SectionNews] Image ${i}:`, {
+        //   tagName: img.tagName,
+        //   src: img.src,
+        //   alt: img.alt,
+        //   hasOverlay: img.hasAttribute('data-image-overlay')
+        // })
     })
     
     // Dispatch event for image overlay plugin to re-initialize

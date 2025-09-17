@@ -214,7 +214,7 @@ export default defineNuxtPlugin(() => {
   
   // Re-initialize when news content loads
   window.addEventListener('news-loaded', () => {
-    console.log('[ImageOverlay] News content loaded, re-initializing...')
+    //console.log('[ImageOverlay] News content loaded, re-initializing...')
     initImageOverlays()
     // Wait a bit for GSAP to be fully ready
     setTimeout(setupScrollTriggers, 100)

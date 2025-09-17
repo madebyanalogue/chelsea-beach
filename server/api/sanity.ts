@@ -405,7 +405,10 @@ export default defineEventHandler(async (event) => {
               },
               content,
               columns,
-              offset
+              offset,
+              splitTitle,
+              splitTitleLeft,
+              splitTitleRight
             },
             marqueeContent {
               linkTitle,

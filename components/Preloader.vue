@@ -189,22 +189,22 @@ const initPreloaderAnimation = () => {
     animationTimeline.set('.image-sequence', { opacity: 0 })
     animationTimeline.to('.image-sequence', { 
       opacity: 1, 
-      duration: 0.5, 
-      ease: "power2.out" 
+      duration: 1.5, 
+      ease: "power2.in" 
     })
     
     // Stage 2: Logotype fades in overlaid (after image)
-    const logotypeStart = 0.5 // Start after image fade in
+    const logotypeStart = 1 // Start after image fade in
     animationTimeline.set('.website-icon-container', { opacity: 0, visibility: 'visible' }, logotypeStart)
     animationTimeline.to('.website-icon-container', { 
       opacity: 1, 
-      duration: 0.8, 
-      ease: "power2.out" 
+      duration: 1.5, 
+      ease: "power2.in" 
     }, logotypeStart)
     
     // Stage 3: Transform up and out (after logotype)
-    const holdTime = logotypeStart + 0.5 // Hold for 1 second after logotype appears
-    const exitTime = holdTime + 0.5 // Exit animation duration
+    const holdTime = logotypeStart + 1.2 // Hold for 1 second after logotype appears
+    const exitTime = holdTime + 0.6 // Exit animation duration
     
     // Animate preloader container up and out
     animationTimeline.to('.preloader-container', {
@@ -298,7 +298,7 @@ watch(siteSettings, async (newSettings) => {
     
     // Preloader is ready
     // eslint-disable-next-line no-console
-    console.log('[Preloader] Ready - starting animation')
+    //console.log('[Preloader] Ready - starting animation')
     // Small delay to ensure DOM is ready
     setTimeout(() => {
       // Emit ready event before starting animation
