@@ -1,7 +1,7 @@
 export default defineNuxtPlugin(() => {
   // Available overlay colors
   const overlayColors = [
-    '#5b5653', // dark grey
+    //'#5b5653', // dark grey
     //'#dfd3cd', // beige
     //'#f7efeb', // light grey
     '#ffdd15'  // yellow
