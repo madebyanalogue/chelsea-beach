@@ -152,7 +152,9 @@ const props = defineProps({
 })
 
 const { getImageUrl } = useSanityImage()
-const { extractColorFromImage, getColorForGallery, setColorForGallery } = useColorExtraction()
+// Disable runtime color extraction for this section.
+// We still use the shared getters/setters so downstream logic stays unchanged.
+const { /* extractColorFromImage */ getColorForGallery, setColorForGallery } = useColorExtraction()
 
 // Gallery data
 const galleries = ref([])
@@ -238,8 +240,8 @@ const loadMore = async () => {
     item.style.opacity = '0'
   })
   fadeInThumbs(newItems)
-
-  await extractColorsForGalleries()
+  // Assign palette colors to all galleries after revealing more items
+  assignPaletteColors()
 }
 
 // Setup animation after galleries are loaded
@@ -280,19 +282,18 @@ const setupAnimation = () => {
   }
 }
 
-// Color extraction methods
-const extractColorsForGalleries = async () => {
-  for (const gallery of displayedGalleries.value) {
-    if (gallery.thumbnail?.asset) {
-      try {
-        const imageUrl = getImageUrl(gallery.thumbnail)
-        const color = await extractColorFromImage(imageUrl)
-        setColorForGallery(gallery._id, color)
-      } catch (error) {
-        console.error(`Error extracting color for gallery ${gallery._id}:`, error)
-      }
-    }
-  }
+// Static palette for SectionGalleries (in order).
+// Provided brand colors:
+// 1) #e0d0c5  2) #ac7cba  3) #64be85  4) #fee510  5) #fe330a  6) #5cc1d5
+const galleryPalette = ['#e0d0c5', '#ac7cba', '#64be85', '#fee510', '#fe330a', '#5cc1d5']
+
+// Assign colors from the static palette instead of extracting from images.
+const assignPaletteColors = () => {
+  if (!Array.isArray(galleries.value)) return
+  galleries.value.forEach((gallery, idx) => {
+    const color = galleryPalette[idx % galleryPalette.length]
+    setColorForGallery(gallery._id, color)
+  })
 }
 
 const handleGalleryHover = (galleryId) => {
@@ -820,8 +821,8 @@ onMounted(async () => {
     const result = await $fetch('/api/sanity', { params: { type: 'galleries' } })
     galleries.value = result || []
     
-    // Extract colors for galleries
-    await extractColorsForGalleries()
+    // Assign static palette colors for this section
+    assignPaletteColors()
     
     await nextTick()
     
