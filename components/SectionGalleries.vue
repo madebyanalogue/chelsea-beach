@@ -784,8 +784,16 @@ const createLightbox = (container) => {
               ease: 'power2.out'
             }, 0.8);
           }
-          // Always reveal the close button even if there's only one item
+          // Always reveal the nav container and close button even if there's only one item
           const closeBtn = elements.wrapper.querySelector('[data-lightbox="close"]')
+          const navElNow = elements.wrapper.querySelector('.lightbox-nav')
+          if (navElNow) {
+            tl.to(navElNow, {
+              autoAlpha: 1,
+              duration: 0.6,
+              ease: 'power2.out'
+            }, 0.8)
+          }
           if (closeBtn) {
             tl.to(closeBtn, {
               autoAlpha: 1,
