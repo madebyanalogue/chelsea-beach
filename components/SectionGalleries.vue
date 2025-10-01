@@ -4,8 +4,8 @@
     class="section-galleries"
   >
     <div class="">
-      <div data-gallery="" class="gallery-group py2">
-        <div role="list" class="gallery-grid grid grid-2 grid-sm-3 grid-md-4 gap-2" ref="gridRef">
+      <div data-gallery="" class="gallery-group py-md-2">
+        <div role="list" class="gallery-grid grid grid-2 grid-sm-2 grid-md-4" ref="gridRef">
           <div 
             v-for="(gallery, index) in displayedGalleries" 
             :key="gallery._id"
@@ -281,6 +281,7 @@ const setupAnimation = () => {
     }
   }
 }
+
 
 // Static palette for SectionGalleries (in order).
 // Provided brand colors:
@@ -782,13 +783,15 @@ const createLightbox = (container) => {
               stagger: 0.08,
               ease: 'power2.out'
             }, 0.8);
-            if (navEl) {
-              tl.to(navEl, {
-                autoAlpha: 1,
-                duration: 0.6,
-                ease: 'power2.out'
-              }, '<')
-            }
+          }
+          // Always reveal the close button even if there's only one item
+          const closeBtn = elements.wrapper.querySelector('[data-lightbox="close"]')
+          if (closeBtn) {
+            tl.to(closeBtn, {
+              autoAlpha: 1,
+              duration: 0.6,
+              ease: 'power2.out'
+            }, 0.8)
           }
           
           // nav animations removed
@@ -886,17 +889,38 @@ onMounted(async () => {
   --container-padding: 0vw;
   --columns: 4;
   --gap: var(--pad-2);
-  --item-width: 23vw;
-  --item-margin-bottom: calc(var(--item-width) / 3.5);
+  --item-width: calc(50vw - 30px);
+  --item-margin-bottom: 25px;
   --button-spacing: 2vw;
   opacity: 0;
   visibility: hidden;
   color: rgba(0,0,0,0.6);
+  gap: 0px;
 }
 
 .section-galleries.loaded {
   opacity: 1;
   visibility: visible;
+}
+@media (min-width: 600px) {
+  .section-galleries {
+    --item-width: 45vw;
+    --item-margin-bottom: 3.25vw;
+  }
+}
+
+@media (min-width: 800px) {
+  .section-galleries {
+    --item-width: 28vw;
+    --item-margin-bottom: 3vw;
+    gap: var(--pad-2);
+  }
+}
+
+@media (min-width: 1024px) {
+  .section-galleries {
+    --item-width: 22vw;
+  }
 }
 
 
@@ -916,6 +940,7 @@ gap:0;
   margin-bottom: var(--item-margin-bottom);
   display:flex;
   justify-content: center;
+  aspect-ratio: 1/1;
 }
 
 .gallery-item__button {
@@ -952,6 +977,28 @@ gap:0;
   }
 }
 
+.gallery-item__img {
+  width: 100%;
+  max-width: calc(var(--item-width) / 1);
+  max-height: calc(var(--item-width) / 1);
+  object-fit: contain;
+  object-position: center;
+  position: relative;
+  visibility:visible !important;
+  opacity:1 !important;
+}
+.gallery-title {
+  font-size: var(--h5);
+  margin-top: calc(var(--pad-1) / 2);
+  margin-bottom: 0;
+  position: absolute;
+  top: 100%;
+  width: 100%;
+  text-align: left;
+}
+
+
+
 .lightbox-img__item-inner {
   position: relative;
   width: auto;
@@ -963,26 +1010,6 @@ gap:0;
   position: relative;
 }
 
-.gallery-item__img {
-  width: 100%;
-  max-width: calc(var(--item-width) / 1);
-  max-height: calc(var(--item-width) / 1);
-  object-fit: contain;
-  object-position: center;
-  position: relative;
-  visibility:visible !important;
-  opacity:1 !important;
-}
-
-.gallery-title {
-  font-size: var(--h5);
-  margin-top: calc(var(--pad-1) / 2);
-  margin-bottom: 0;
-  position: absolute;
-  top: 100%;
-  width: 100%;
-  text-align: left;
-}
 
 /* Lightbox Styles */
 .lightbox-wrap {
@@ -1003,11 +1030,14 @@ gap:0;
   display: flex;
 }
 
-.lightbox-img__wrap {
-  height: calc(100svh * var(--items));
-  overflow-x: hidden;
-  overflow-y: scroll;
-  padding-left: calc(calc(100vw - 100svh) / 2);
+
+@media (min-width: 1024px) {
+  .lightbox-img__wrap {
+    height: calc(100svh * var(--items));
+    overflow-x: hidden;
+    overflow-y: scroll;
+    padding-left: calc(calc(100vw - 100svh) / 2);
+  }
 }
 
  .scroll-indicator {
@@ -1084,7 +1114,7 @@ gap:0;
   height: calc(100svh * var(--items));
   width: 100%;
   flex-direction: column;
-  transform: translateY(var(--scrolled-height)) !important;
+  transform: none !important;
 }
 }
 
@@ -1117,7 +1147,6 @@ gap:0;
 }
 .lightbox-img__item > video {
   height: auto;
-  width: auto;
 } 
 
 /* Navigation */
@@ -1219,8 +1248,8 @@ gap:0;
 }
 
 .load-more-button {
-  width: 25vw;
-  height: 25vw;
+  width: 50vw;
+  height: 50vw;
   transform: translate(-50%, 0%);
   position: absolute;
   left: 50%;
@@ -1228,6 +1257,18 @@ gap:0;
   letter-spacing: var(--letterspacing-large);
   text-transform: uppercase;
   font-size: var(--h5);
+}
+@media (min-width: 800px) {
+  .load-more-button {
+    width: 33vw;
+    height: 33vw;
+  }
+}
+@media (min-width: 1024px) {
+  .load-more-button {
+    width: 25vw;
+    height: 25vw;
+  }
 }
 .load-more-button:hover {
   letter-spacing: 0.5em;
@@ -1261,7 +1302,7 @@ transform: scale(.95);
 
 
 /* Responsive Design */
-@media (min-width: 768px) {
+@media (min-width: 800px) {
   .gallery-grid {
     grid-template-columns: repeat(3, 1fr);
   }
@@ -1273,7 +1314,7 @@ transform: scale(.95);
   }
 }
 
-@media (max-width: 767px) {
+@media (max-width: 799px) {
   .section-galleries {
     padding: 2rem 0;
   }
@@ -1286,16 +1327,8 @@ transform: scale(.95);
     grid-template-columns: repeat(2, 1fr);
   }
   
-  .gallery-item__img {
-    height: 200px;
-  }
-  
   .thumbnail-placeholder {
     height: 200px;
-  }
-  
-  .lightbox-wrap {
-    padding: 1rem;
   }
   
   .lightbox-nav {
@@ -1305,5 +1338,33 @@ transform: scale(.95);
   .lightbox-nav__col.center {
     gap: 1rem;
   }
+
+
+
+  .lightbox-wrap, .lightbox-img__list, .lightbox-img__wrap {
+    height: auto;
+    min-height:100svh;
+  }
+  .lightbox-img__wrap {
+    height: 100svh;
+    overflow:auto;
+  }
+  .lightbox-img__list {
+    position: relative;
+    pointer-events: all;
+    gap:40px;
+    padding:40px;
+  }
+  .lightbox-img__item {
+    width: 100svh;
+    height: auto;
+  }
+  .lightbox-img__item {
+    width:100%;
+  }
+  
 }
+
+
+
 </style>
