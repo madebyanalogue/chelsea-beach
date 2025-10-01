@@ -15,10 +15,10 @@
                 <div class="h4 heading service--title">
                   <span class="">{{ service.title }}</span>
                 </div>
-                <!-- Booking Button -->
-                <div v-if="service.bookingLink" class="booking-section">
-                  <a :href="service.bookingLink" target="_blank" rel="noopener" class="button h6 uppercase">
-                    <span>Book</span>
+                <!-- Booking Button (falls back to site settings booking link) -->
+                <div v-if="service.bookingLink || bookingLink" class="booking-section">
+                  <a :href="service.bookingLink || bookingLink" target="_blank" rel="noopener" class="button h6 uppercase">
+                    <span>{{ bookingTitle || 'Book' }}</span>
                   </a>
                 </div>
               </div>
@@ -105,6 +105,7 @@ import { useSanityImage } from '~/composables/useSanityImage'
 import SanityBlocks from '~/components/SanityBlocks.vue'
 import gsap from 'gsap'
 import { useScrollTrigger } from '~/composables/useScrollTrigger'
+import { useSiteSettings } from '~/composables/useSiteSettings'
 
 const props = defineProps({
   section: {
@@ -112,6 +113,8 @@ const props = defineProps({
     required: true
   }
 })
+
+const { bookingLink, bookingTitle } = useSiteSettings()
 
 const { getImageUrl } = useSanityImage()
 const { registerSection, unregisterSection } = useScrollTrigger()
