@@ -65,7 +65,7 @@ const { isHeaderVisible } = useHeaderScroll()
 const { settings: siteSettings } = useSiteSettings()
 
 // Website title from Sanity
-const websiteTitle = computed(() => siteSettings.value?.title || 'Chelsea Beach')
+const websiteTitle = computed(() => siteSettings.value?.title || 'Registix')
 
 // Deprecated local menu control (kept for layout logic only)
 const menuOpen = ref(false)

@@ -28,7 +28,7 @@ import { computed } from 'vue'
 import { useSiteSettings } from '~/composables/useSiteSettings'
 
 const { title } = useSiteSettings()
-const websiteTitle = computed(() => title.value || 'Chelsea Beach')
+const websiteTitle = computed(() => title.value || 'Registix')
 </script>
 
 <style scoped>

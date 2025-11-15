@@ -7,7 +7,7 @@ interface SanityError extends Error {
 }
 
 const client = createClient({
-  projectId: 'wwwrb2ji',
+  projectId: 'uuzbe0e0',
   dataset: 'production',
   apiVersion: '2024-03-19',
   useCdn: false

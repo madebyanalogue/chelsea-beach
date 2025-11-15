@@ -104,7 +104,7 @@ const bgPanel3 = ref(null)
 
 // Computed properties
 const preloaderImages = computed(() => siteSettings.value?.preloaderImages || [])
-const websiteTitle = computed(() => siteSettings.value?.title || 'Chelsea Beach')
+const websiteTitle = computed(() => siteSettings.value?.title || 'Registix')
 const logotypeImageUrl = computed(() => {
   const logotype = siteSettings.value?.logotype
   if (!logotype?.asset?.url) return null
