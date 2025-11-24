@@ -6,7 +6,7 @@ export default defineNuxtConfig({
     '@nuxt/image'
   ],
   sanity: {
-    projectId: 'uuzbe0e0',
+    projectId: 'wwwrb2ji',
     dataset: 'production',
     useCdn: true
   },

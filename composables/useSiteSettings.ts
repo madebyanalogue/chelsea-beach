@@ -19,7 +19,7 @@ export const useSiteSettings = () => {
     settings,
     error,
     pending,
-    title: computed(() => settings.value?.title || 'Registix'),
+    title: computed(() => settings.value?.title || 'Chelsea Beach'),
     contactInfo: computed(() => settings.value?.contactInfo || []),
     openingTimes: computed(() => settings.value?.openingTimes || []),
     linkedinUrl: computed(() => settings.value?.linkedinUrl || ''),

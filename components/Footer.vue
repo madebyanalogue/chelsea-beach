@@ -144,7 +144,7 @@ const props = defineProps({
 });
 
 // Sanity image URL builder
-const builder = imageUrlBuilder({ projectId: 'uuzbe0e0', dataset: 'production' })
+const builder = imageUrlBuilder({ projectId: 'wwwrb2ji', dataset: 'production' })
 const $urlFor = (source) => builder.image(source)
 
 const route = useRoute();
@@ -158,7 +158,7 @@ const {
 } = useSiteSettings();
 
 // Website title from Sanity
-const websiteTitle = computed(() => title.value || 'Registix');
+const websiteTitle = computed(() => title.value || 'Chelsea Beach');
 
 const { 
   mainMenu, 
